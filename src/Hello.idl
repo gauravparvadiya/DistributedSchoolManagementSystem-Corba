@@ -4,7 +4,8 @@ module HelloApp
   {
   	string sayHello();
   	
-  	string createTRecord(in string fname);
+  	string createTRecord(in string managerID,in string fname,in string lastName, in string address, in string phone, in string specialization,
+			in string location);
 			
   	oneway void shutdown();
   };

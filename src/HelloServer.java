@@ -1,8 +1,5 @@
 
 
-import java.rmi.RemoteException;
-import java.rmi.server.ServerNotActiveException;
-
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -10,7 +7,9 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
-import HelloApp.*;
+import HelloApp.Hello;
+import HelloApp.HelloHelper;
+import HelloApp.HelloPOA;
 
 class HelloImpl extends HelloPOA {
 	private ORB orb;
@@ -40,11 +39,12 @@ class HelloImpl extends HelloPOA {
 	}
 
 	@Override
-	public String createTRecord(String fname) {
+	public String createTRecord(String managerID, String fname, String lastName, String address, String phone,
+			String specialization, String location) {
 		// TODO Auto-generated method stub
-		System.out.println(fname);
-		return fname;
+		return null;
 	}
+
 
 	
 }
