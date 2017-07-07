@@ -4,7 +4,7 @@ module HelloApp
   {
   	string sayHello();
   	
-  	boolean createTRecord(in string fname);
+  	string createTRecord(in string fname);
 			
   	oneway void shutdown();
   };
