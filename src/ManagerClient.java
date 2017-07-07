@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,16 +13,14 @@ import CorbaApp.Center;
 import CorbaApp.CenterHelper;
 import jdk.nashorn.internal.parser.JSONParser;
 
-
 public class ManagerClient {
 	static Center centerImpl;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
 	public ArrayList<Manager> mtl, lvl, ddo;
 	JSONParser parser;
-	
-	private Boolean managerIdentification(ManagerClient managerClient, String managerID)
-			throws RemoteException, NotBoundException {
 
+	public Boolean managerIdentification(ManagerClient managerClient, String managerID) {
+		System.out.println(managerID);
 		if (managerID.substring(0, 3).equals("MTL")) {
 			for (int i = 0; i < managerClient.managerHashMap.get("MTL").size(); i++) {
 
@@ -67,7 +63,7 @@ public class ManagerClient {
 		}
 		return false;
 	}
-	
+
 	public static void main(String args[]) {
 		try {
 			// create and initialize the ORB
@@ -84,32 +80,25 @@ public class ManagerClient {
 			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));
 
 			System.out.println("Obtained a handle on server object: " + centerImpl);
-			
-			
-			
-			
+
 			ManagerClient managerClient = new ManagerClient();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
 				System.out.println("Enter the Manager ID : ");
 				managerID = reader.readLine();
-				System.out.println("oiii");
-				System.out.println("id : "+managerID);
-
+				System.out.println("id : " + managerID);
+				
+				System.out.println(managerClient.managerIdentification(managerClient, managerID));
+				
 				if (!managerID.equals("") && managerID.length() == 7
 						&& managerClient.managerIdentification(managerClient, managerID)) {
-					
+					System.out.println("found");
 				} else {
 					System.out.println("Manager not found.");
 				}
 			} while (!managerID.equals("exit"));
-			
-			
-			
-			
-			
-			
+
 			System.out.println(centerImpl.sayHello());
 			centerImpl.shutdown();
 
