@@ -20,7 +20,7 @@ public class ManagerClient {
 	JSONParser parser;
 
 	public Boolean managerIdentification(ManagerClient managerClient, String managerID) {
-		System.out.println(managerID);
+		System.out.println("ID is : "+managerID);
 		if (managerID.substring(0, 3).equals("MTL")) {
 			for (int i = 0; i < managerClient.managerHashMap.get("MTL").size(); i++) {
 
@@ -66,8 +66,11 @@ public class ManagerClient {
 
 	public static void main(String args[]) {
 		try {
+			String args1="-ORBInitialPort 1050 -ORBInitialHost localhost";
+			String arg[]=args1.split(" ");
+			
+			ORB orb = ORB.init(arg, null);
 			// create and initialize the ORB
-			ORB orb = ORB.init(args, null);
 
 			// get the root naming context
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
