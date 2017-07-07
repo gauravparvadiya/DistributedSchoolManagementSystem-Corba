@@ -1,14 +1,13 @@
-
-
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
-import HelloApp.Hello;
-import HelloApp.HelloHelper;
+import CorbaApp.Center;
+import CorbaApp.CenterHelper;
 
-public class HelloClient {
-	static Hello helloImpl;
+
+public class ManagerClient {
+	static Center centerImpl;
 	
 	public static void main(String args[]) {
 		try {
@@ -23,12 +22,12 @@ public class HelloClient {
 
 			// resolve the Object Reference in Naming
 			String name = "Hello";
-			helloImpl = HelloHelper.narrow(ncRef.resolve_str(name));
+			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));
 
-			System.out.println("Obtained a handle on server object: " + helloImpl);
+			System.out.println("Obtained a handle on server object: " + centerImpl);
 			System.out.println();
-			System.out.println(helloImpl.sayHello());
-			helloImpl.shutdown();
+			System.out.println(centerImpl.sayHello());
+			centerImpl.shutdown();
 
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);

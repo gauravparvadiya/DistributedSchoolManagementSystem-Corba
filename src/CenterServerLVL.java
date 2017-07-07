@@ -1,5 +1,4 @@
 
-
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
@@ -7,31 +6,28 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
-import HelloApp.Hello;
-import HelloApp.HelloHelper;
-import HelloApp.HelloPOA;
+import CorbaApp.Center;
+import CorbaApp.CenterHelper;
+import CorbaApp.CenterPOA;
 
-class HelloImpl extends HelloPOA {
+class CenterServerLVLImplementation extends CenterPOA {
 	private ORB orb;
 
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
 	}
 
-	/*// implement sayHello() method
-	public Boolean createTRecord(){
-		System.out.println("hii teacher");
-		return null;
-	}
-			
-	public Boolean createSRecord() {
-		System.out.println("hii studnet");
-		return null;
-	}*/
-	
+	/*
+	 * // implement sayHello() method public Boolean createTRecord(){
+	 * System.out.println("hii teacher"); return null; }
+	 * 
+	 * public Boolean createSRecord() { System.out.println("hii studnet");
+	 * return null; }
+	 */
+
 	public String sayHello() {
-	    return "\nHello world !!\n";
-	  }
+		return "\nHello world !!\n";
+	}
 
 	// implement shutdown() method
 	public void shutdown() {
@@ -64,11 +60,9 @@ class HelloImpl extends HelloPOA {
 		return null;
 	}
 
-
-	
 }
 
-public class HelloServer {
+public class CenterServerLVL {
 
 	public static void main(String args[]) {
 		try {
@@ -80,12 +74,12 @@ public class HelloServer {
 			rootpoa.the_POAManager().activate();
 
 			// create servant and register it with the ORB
-			HelloImpl helloImpl = new HelloImpl();
-			helloImpl.setORB(orb);
+			CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
+			centerServerLVLImplementation.setORB(orb);
 
 			// get object reference from the servant
-			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(helloImpl);
-			Hello href = HelloHelper.narrow(ref);
+			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerLVLImplementation);
+			Center href = CenterHelper.narrow(ref);
 
 			// get the root naming context
 			// NameService invokes the name service

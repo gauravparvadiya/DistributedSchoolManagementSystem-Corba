@@ -1,6 +1,6 @@
-module HelloApp
+module CorbaApp
 {
-  interface Hello
+  interface Center
   {
   	string sayHello();
   	
