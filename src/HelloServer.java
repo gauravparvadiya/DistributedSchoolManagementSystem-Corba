@@ -40,11 +40,13 @@ class HelloImpl extends HelloPOA {
 	}
 
 	@Override
-	public boolean create() {
+	public boolean createTRecord(String fname) {
 		// TODO Auto-generated method stub
-		System.out.println("hii create");
+		System.out.println(fname);
 		return false;
 	}
+
+	
 }
 
 public class HelloServer {

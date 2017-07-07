@@ -27,7 +27,7 @@ public class HelloClient {
 
 			System.out.println("Obtained a handle on server object: " + helloImpl);
 			System.out.println(helloImpl.sayHello());
-			System.out.println(helloImpl.create());
+			System.out.println(helloImpl.createTRecord("fname is hirangi"));
 			helloImpl.shutdown();
 
 		} catch (Exception e) {
