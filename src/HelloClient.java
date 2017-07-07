@@ -9,7 +9,7 @@ import HelloApp.HelloHelper;
 
 public class HelloClient {
 	static Hello helloImpl;
-
+	
 	public static void main(String args[]) {
 		try {
 			// create and initialize the ORB
@@ -26,6 +26,7 @@ public class HelloClient {
 			helloImpl = HelloHelper.narrow(ncRef.resolve_str(name));
 
 			System.out.println("Obtained a handle on server object: " + helloImpl);
+			System.out.println();
 			System.out.println(helloImpl.sayHello());
 			helloImpl.shutdown();
 

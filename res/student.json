@@ -1,0 +1,80 @@
+[{
+	"id": "MSR10001",
+	"fname": "Miki",
+	"lname": "Raviv",
+	"coursesRegistered" : ["Mathematics","Machine Learning","Distributed System Design"],
+	"status": "1",
+	"statusDueDate" : "09-15-2017"
+},
+{
+	"id": "MSR10002",
+	"fname": "Kajal",
+	"lname": "Agrawal",
+	"coursesRegistered" : ["Mathematics","Distributed System Design"],
+	"status": "1",
+	"statusDueDate" : "08-28-2017"
+},
+{
+	"id": "MSR10003",
+	"fname": "Honey",
+	"lname": "Singh",
+	"coursesRegistered" : ["Mathematics","Machine Learning"],
+	"status": "0",
+	"statusDueDate" : "05-20-2017"
+},
+{
+	"id": "MSR10004",
+	"fname": "Sahrukh",
+	"lname": "Khan",
+	"coursesRegistered" : ["Machine Learning","Distributed System Design"],
+	"status": "0",
+	"statusDueDate" : "05-28-2017"
+},
+{
+	"id": "LSR10001",
+	"fname": "Amitabh",
+	"lname": "Bachchan",
+	"coursesRegistered" : ["Mathematics","Machine Learning","Distributed System Design"],
+	"status": "1",
+	"statusDueDate" : "06-17-2017"
+},
+{
+	"id": "LSR10002",
+	"fname": "Karina",
+	"lname": "Kapoor",
+	"coursesRegistered" : ["Machine Learning","Distributed System Design"],
+	"status": "0",
+	"statusDueDate" : "07-10-2017"
+},
+{
+	"id": "LSR10003",
+	"fname": "Sonakshi",
+	"lname": "Sinha",
+	"coursesRegistered" : ["Mathematics","Distributed System Design"],
+	"status": "1",
+	"statusDueDate" : "08-24-2017"
+},
+{
+	"id": "DSR10001",
+	"fname": "Ravina",
+	"lname": "Tandon",
+	"coursesRegistered" : ["Mathematics","Distributed System Design"],
+	"status": "0",
+	"statusDueDate" : "06-10-2017"
+},
+{
+	"id": "DSR10002",
+	"fname": "Arjun",
+	"lname": "Kapoor",
+	"coursesRegistered" : ["Mathematics","Machine Learning"],
+	"status": "0",
+	"statusDueDate" : "07-30-2017"
+},
+{
+	"id": "DSR10003",
+	"fname": "Nargis",
+	"lname": "Fakri",
+	"coursesRegistered" : ["Mathematics","Machine Learning","Distributed System Design"],
+	"status": "1",
+	"statusDueDate" : "10-10-2017"
+}]
