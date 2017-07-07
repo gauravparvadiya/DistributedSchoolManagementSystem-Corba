@@ -7,6 +7,12 @@ module HelloApp
   	string createTRecord(in string managerID,in string fname,in string lastName, in string address, in string phone, in string specialization,
 			in string location);
 			
+	string createSRecord(in string managerID,in string fname,in string lastName, in string courseRegistered, in string status, in string statusDate);
+	
+	string getRecordCounts(in string managerID);
+			
+	string editRecord(in string managerID,in string recordID,in string fieldName, in string newValue);
+	
   	oneway void shutdown();
   };
 };

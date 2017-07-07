@@ -45,6 +45,25 @@ class HelloImpl extends HelloPOA {
 		return null;
 	}
 
+	@Override
+	public String createSRecord(String managerID, String fname, String lastName, String courseRegistered, String status,
+			String statusDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getRecordCounts(String managerID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 }
