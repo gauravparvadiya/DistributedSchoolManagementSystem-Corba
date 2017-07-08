@@ -32,7 +32,7 @@ import CorbaApp.CenterHelper;
 
 public class ManagerClient {
 
-	static Center centerImplMTL,centerImplLVL,centerImplDDO;
+	static Center centerImplMTL, centerImplLVL, centerImplDDO;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
 	public ArrayList<Manager> mtl, lvl, ddo;
 	JsonParser parser;
@@ -132,6 +132,166 @@ public class ManagerClient {
 	}
 
 	/**
+	 * Method to connect client to particular server
+	 * 
+	 * @param managerID
+	 * @param fn
+	 * @param ln
+	 * @param courses
+	 * @param status
+	 * @param statusDate
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 */
+	public static void connect_student(String managerID, String fn, String ln, String courses, String status,
+			String statusDate) throws RemoteException, NotBoundException {
+		logger.info("Using createSRecord method.");
+		if (managerID.substring(0, 3).equals("MTL")) {
+			if (centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate).equals("hi")) {
+				System.out.println("Record created successfully.");
+				logger.info("Student record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating student record.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			/*
+			 * registry = LocateRegistry.getRegistry(1212); Center stub =
+			 * (Center) registry.lookup("LVLServer"); if (stub.createSRecord(fn,
+			 * ln, courses, status, statusDate, managerID)) {
+			 * System.out.println("Record created successfully.");
+			 * logger.info("Student record created successfully."); } else {
+			 * System.out.println("Something went wrong!!! ");
+			 * logger.error("Server returns error creating student record."); }
+			 */
+		} else {
+			/*
+			 * registry = LocateRegistry.getRegistry(1111); Center stub =
+			 * (Center) registry.lookup("DDOServer"); if (stub.createSRecord(fn,
+			 * ln, courses, status, statusDate, managerID)) {
+			 * System.out.println("Record created successfully.");
+			 * logger.info("Student record created successfully."); } else {
+			 * System.out.println("Something went wrong!!! ");
+			 * logger.error("Server returns error creating student record."); }
+			 */
+		}
+	}
+
+	/**
+	 * Method to connect client to particular server
+	 * 
+	 * @param managerID
+	 * @param fieldname
+	 * @param newvalue
+	 * @param id
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 */
+	public static void connect_edit(String managerID, String fieldname, String newvalue, String id)
+			throws RemoteException, NotBoundException {
+		if (managerID.substring(0, 3).equals("MTL")) {
+			logger.debug("connected to registry 2964");
+			logger.debug("connected to Montreal server");
+			System.out.println(centerImplMTL.editRecord(id, fieldname, newvalue, managerID));
+			if (centerImplMTL.editRecord(id, fieldname, newvalue, managerID).equals("hi")) {
+				System.out.println("Record edited successfully.");
+			} else {
+				System.out.println("Error.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			/*
+			 * registry = LocateRegistry.getRegistry(1212);
+			 * logger.debug("connected to registry 1212"); Center stub =
+			 * (Center) registry.lookup("LVLServer");
+			 * logger.debug("connected to Laval server"); if
+			 * (stub.editRecord(id, fieldname, newvalue, managerID)) {
+			 * System.out.println("Record edited successfully."); }
+			 */
+		} else {
+			/*
+			 * registry = LocateRegistry.getRegistry(1111);
+			 * logger.debug("connected to registry 1111"); Center stub =
+			 * (Center) registry.lookup("DDOServer");
+			 * logger.debug("connected to Dollard-des-Ormeaux server"); if
+			 * (stub.editRecord(id, fieldname, newvalue, managerID)) {
+			 * System.out.println("Record edited successfully."); }
+			 */
+		}
+		logger.info("Using editRecord method");
+	}
+
+	/**
+	 * Method to connect client to particular server
+	 * 
+	 * @param managerID
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 */
+	public static void connect_record_count(String managerID) throws RemoteException, NotBoundException {
+		logger.info("Using getRecordCount method.");
+		if (managerID.substring(0, 3).equals("MTL")) {
+			logger.debug("connected to Montreal server");
+			String reply = centerImplMTL.getRecordCounts(managerID);
+			System.out.println("Count : \n" + reply);
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			/*
+			 * registry = LocateRegistry.getRegistry(1212);
+			 * logger.debug("connected to registry 1212"); Center stub =
+			 * (Center) registry.lookup("LVLServer");
+			 * logger.debug("connected to Laval server"); String reply =
+			 * stub.getRecordCounts(managerID); System.out.println("Count : \n"
+			 * + reply);
+			 */ } else {
+			/*
+			 * registry = LocateRegistry.getRegistry(1111);
+			 * logger.debug("connected to registry 1111"); Center stub =
+			 * (Center) registry.lookup("DDOServer");
+			 * logger.debug("connected to Dollard-des-Ormeaux server"); String
+			 * reply = stub.getRecordCounts(managerID);
+			 * System.out.println("Count : \n" + reply);
+			 */ }
+	}
+
+	/**
+	 * Method to validate the edit method parameters
+	 * 
+	 * @param id
+	 * @param fieldName
+	 * @param newValue
+	 * @return
+	 */
+	public static boolean validate_edit(String id, String fieldName, String newValue) {
+
+		if (id.length() == 8) {
+			if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("LTR")
+					|| id.substring(0, 3).equals("DTR")) {
+				logger.info("Starting to edit teacher.");
+				if (fieldName.equals("address") || fieldName.equals("location") || fieldName.equals("phone")) {
+					return true;
+				} else {
+					System.out.println("Invalid Field");
+					return false;
+				}
+			} else if (id.substring(0, 3).equals("MSR") || id.substring(0, 3).equals("LSR")
+					|| id.substring(0, 3).equals("DSR")) {
+				logger.info("Starting to edit student.");
+				if (fieldName.equals("coursesRegistered") || fieldName.equals("status")
+						|| fieldName.equals("statusDueDate")) {
+					return true;
+				} else {
+					System.out.println("Invalid Field");
+					return false;
+				}
+			} else {
+				return true;
+			}
+		} else {
+			System.out.println("Please enter valid record ID");
+			return false;
+		}
+	}
+
+	/**
 	 * Method to identify if the manager is exists or not
 	 * 
 	 * @param managerClient
@@ -193,11 +353,12 @@ public class ManagerClient {
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 			String mtl = "MTLServer";
 			centerImplMTL = CenterHelper.narrow(ncRef.resolve_str(mtl));
-			/*String lvl = "LVLServer";
-			centerImplLVL = CenterHelper.narrow(ncRef.resolve_str(lvl));
-			String ddo = "DDOServer";
-			centerImplDDO = CenterHelper.narrow(ncRef.resolve_str(ddo));
-*/			ManagerClient managerClient = new ManagerClient();
+			/*
+			 * String lvl = "LVLServer"; centerImplLVL =
+			 * CenterHelper.narrow(ncRef.resolve_str(lvl)); String ddo =
+			 * "DDOServer"; centerImplDDO =
+			 * CenterHelper.narrow(ncRef.resolve_str(ddo));
+			 */ ManagerClient managerClient = new ManagerClient();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
@@ -261,7 +422,7 @@ public class ManagerClient {
 							// temp = s.nextLine();
 							// courses = temp.split(",");
 							courses = s.nextLine();
-							System.out.println("Status : (1 for active & 0 for deactive)");
+							System.out.println("Status : (active & deactive)");
 							status = s.nextLine();
 							// s.nextLine();
 							System.out.println("Status Date : (DD/MM/YYYY)");
@@ -272,9 +433,7 @@ public class ManagerClient {
 									&& !statusDate.equals("")) {
 								if (status.equals("active") || status.equals("deactive")) {
 									if (matcher.matches() && (status.equals("active") || status.equals("deactive"))) {
-										// connect_student(managerID, firstName,
-										// lastName, courses, status,
-										// statusDate);
+										connect_student(managerID, firstName, lastName, courses, status, statusDate);
 									} else
 										System.out.println("check if you have entered correct status or date or ID");
 								} else {
@@ -284,7 +443,7 @@ public class ManagerClient {
 								System.out.println("Field can not be blank");
 							break;
 						case "3":
-							// connect_record_count(managerID);
+							connect_record_count(managerID);
 							break;
 						case "4":
 							System.out.println("Enter information to edit : ");
@@ -295,10 +454,9 @@ public class ManagerClient {
 							System.out.println("New Value : ");
 							newValue = s.nextLine();
 							if (!newValue.equals("")) {
-								// if (validate_edit(id, fieldName, newValue)) {
-								// connect_edit(managerID, fieldName, newValue,
-								// id);
-								// }
+								if (validate_edit(id, fieldName, newValue)) {
+									connect_edit(managerID, fieldName, newValue, id);
+								}
 							} else {
 								System.out.println("Please enter all fields.");
 							}

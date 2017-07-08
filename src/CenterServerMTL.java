@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.omg.CORBA.ORB;
@@ -288,7 +290,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 				+ courseRegistered + ", " + status + ", " + statusDate + "}]");
 		addToMap(s);
 		logger.info(managerID + "| Student created successfully.");
-		return null;
+		return "hi";
 	}
 
 	@Override
@@ -353,8 +355,125 @@ class CenterServerMTLImplementation extends CenterPOA {
 	
 	@Override
 	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
-		// TODO Auto-generated method stub
-		return null;
+		Boolean result = false;
+		String result_string;
+		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);
+		if (recordID.substring(0, 3).equals("MSR")) {
+			Student s;
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				for (int j = 0; j < array.size(); j++) {
+					if (array.get(j) instanceof Student) {
+						s = (Student) array.get(j);
+						if (s.getId().equals(recordID)) {
+							System.out.println("Student found");
+							logger.info(managerID + "| Record id " + recordID + " identified as a student.");
+							result = true;
+							if (fieldName.equals("status")) {
+								if (newValue.equals("active")||newValue.equals("deactive")) {
+									s.setStatus(newValue);
+									logger.info(
+											managerID + "| Record - " + recordID + " status changed to " + newValue);
+									result=true;
+								} else {
+									logger.info(managerID + "| Entered invalid status number.");
+									result=false;
+								}
+							} else if (fieldName.equals("statusDueDate")) {
+								Pattern pattern;
+								Matcher matcher;
+								String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
+								pattern = Pattern.compile(DATE_PATTERN);
+								matcher = pattern.matcher(newValue);
+								if (matcher.matches()) {
+									s.setStatusDueDate(newValue);
+									logger.info(managerID + "| Record - " + recordID + " status date changed to "
+											+ newValue);
+									result=true;
+								} else {
+									logger.info(managerID + "| Entered invalid date.");
+									result=false;
+								}
+							} else if (fieldName.equals("coursesRegistered")) {
+								s.setCoursesRegistered(newValue);
+								logger.info(managerID + "| Record - " + recordID + " registered courses changed to "
+										+ newValue);
+								result=true;
+							}
+							if(result)
+								result_string="hi";
+							else
+								result_string="bye";
+							return result_string;
+						} else {
+							result = false;
+						}
+					}
+				}
+			}
+		} else if (recordID.substring(0, 3).equals("MTR")) {
+			System.out.println("Edit teacher");
+			Teacher t;
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				for (int j = 0; j < array.size(); j++) {
+					if (array.get(j) instanceof Teacher) {
+						t = (Teacher) array.get(j);
+						if (t.getId().equals(recordID)) {
+							System.out.println("Teacher found");
+							logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
+							result = true;
+							if (fieldName.equals("address")) {
+								t.setAddress(newValue);
+								logger.info(
+										managerID + "| Record - " + recordID + " address changed to " + newValue);
+								result=true;
+							} else if (fieldName.equals("location")) {
+								t.setLocation(newValue);
+								logger.info(
+										managerID + "| Record - " + recordID + " location changed to " + newValue);
+								result=true;
+							} else if (fieldName.equals("phone")) {
+								t.setPhone(newValue);
+								logger.info(managerID + "| Record - " + recordID + " phone number changed to "
+										+ newValue);
+								result=true;
+								
+							}
+							if(result)
+								result_string="hi";
+							else
+								result_string="bye";
+							return result_string;
+						} else {
+							System.out.println("hiii");
+							result = false;
+						}
+					}
+
+				}
+			}
+
+		} else {
+			result = false;
+		}
+		if (!result) {
+			logger.info(managerID + "| Record - " + recordID + " not found.");
+			System.out.println("no record found");
+			if(result)
+				result_string="hi";
+			else
+				result_string="bye";
+			return result_string;
+		} else {
+			if(result)
+				result_string="hi";
+			else
+				result_string="bye";
+			return result_string;
+		}
 	}
 	
 }
