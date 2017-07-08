@@ -7,17 +7,17 @@ import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
+import com.google.gson.JsonParser;
 import com.users.Manager;
 
 import CorbaApp.Center;
 import CorbaApp.CenterHelper;
-import jdk.nashorn.internal.parser.JSONParser;
 
 public class ManagerClient {
 	static Center centerImpl;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
 	public ArrayList<Manager> mtl, lvl, ddo;
-	JSONParser parser;
+	JsonParser parser;
 
 	public Boolean managerIdentification(ManagerClient managerClient, String managerID) {
 		System.out.println("ID is : "+managerID);
