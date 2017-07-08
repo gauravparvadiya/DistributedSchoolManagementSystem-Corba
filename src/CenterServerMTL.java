@@ -355,7 +355,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	
 	@Override
 	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
-		System.out.println(recordID);
+		//System.out.println(recordID);
 		Boolean result = false;
 		String result_string;
 		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);
@@ -414,7 +414,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 				}
 			}
 		} else if (recordID.substring(0, 3).equals("MTR")) {
-			System.out.println("Edit teacher");
+			//System.out.println("Edit teacher");
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -423,7 +423,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
-							System.out.println("Teacher found");
+							//System.out.println("Teacher found");
 							logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
 							result = true;
 							if (fieldName.equals("address")) {
