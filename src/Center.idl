@@ -1,9 +1,7 @@
 module CorbaApp
 {
   interface Center
-  {
-  	string sayHello();
-  	
+  {  	
   	string createTRecord(in string managerID,in string fname,in string lastName, in string address, in string phone, in string specialization,
 			in string location);
 			

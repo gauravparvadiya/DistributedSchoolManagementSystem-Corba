@@ -102,7 +102,7 @@ public class ManagerClient {
 				}
 			} while (!managerID.equals("exit"));
 
-			System.out.println(centerImpl.sayHello());
+			
 			centerImpl.shutdown();
 
 		} catch (Exception e) {
