@@ -3,7 +3,7 @@
 	"fname": "Miki",
 	"lname": "Raviv",
 	"coursesRegistered" : ["Mathematics","Machine Learning","Distributed System Design"],
-	"status": "1",
+	"status": "active",
 	"statusDueDate" : "09-15-2017"
 },
 {
@@ -11,7 +11,7 @@
 	"fname": "Kajal",
 	"lname": "Agrawal",
 	"coursesRegistered" : ["Mathematics","Distributed System Design"],
-	"status": "1",
+	"status": "active",
 	"statusDueDate" : "08-28-2017"
 },
 {
@@ -19,7 +19,7 @@
 	"fname": "Honey",
 	"lname": "Singh",
 	"coursesRegistered" : ["Mathematics","Machine Learning"],
-	"status": "0",
+	"status": "deactive",
 	"statusDueDate" : "05-20-2017"
 },
 {
@@ -27,7 +27,7 @@
 	"fname": "Sahrukh",
 	"lname": "Khan",
 	"coursesRegistered" : ["Machine Learning","Distributed System Design"],
-	"status": "0",
+	"status": "active",
 	"statusDueDate" : "05-28-2017"
 },
 {
@@ -35,7 +35,7 @@
 	"fname": "Amitabh",
 	"lname": "Bachchan",
 	"coursesRegistered" : ["Mathematics","Machine Learning","Distributed System Design"],
-	"status": "1",
+	"status": "deactive",
 	"statusDueDate" : "06-17-2017"
 },
 {
@@ -43,7 +43,7 @@
 	"fname": "Karina",
 	"lname": "Kapoor",
 	"coursesRegistered" : ["Machine Learning","Distributed System Design"],
-	"status": "0",
+	"status": "deactive",
 	"statusDueDate" : "07-10-2017"
 },
 {
@@ -51,7 +51,7 @@
 	"fname": "Sonakshi",
 	"lname": "Sinha",
 	"coursesRegistered" : ["Mathematics","Distributed System Design"],
-	"status": "1",
+	"status": "active",
 	"statusDueDate" : "08-24-2017"
 },
 {
@@ -59,7 +59,7 @@
 	"fname": "Ravina",
 	"lname": "Tandon",
 	"coursesRegistered" : ["Mathematics","Distributed System Design"],
-	"status": "0",
+	"status": "deactive",
 	"statusDueDate" : "06-10-2017"
 },
 {
@@ -67,7 +67,7 @@
 	"fname": "Arjun",
 	"lname": "Kapoor",
 	"coursesRegistered" : ["Mathematics","Machine Learning"],
-	"status": "0",
+	"status": "active",
 	"statusDueDate" : "07-30-2017"
 },
 {
@@ -75,6 +75,6 @@
 	"fname": "Nargis",
 	"lname": "Fakri",
 	"coursesRegistered" : ["Mathematics","Machine Learning","Distributed System Design"],
-	"status": "1",
+	"status": "active",
 	"statusDueDate" : "10-10-2017"
 }]

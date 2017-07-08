@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.ServerNotActiveException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -14,8 +16,11 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -72,6 +77,69 @@ public class ManagerClient {
 			managerHashMap.put("DDO", ddo);
 		}
 	}
+	
+	/**
+	 * Method to connect the client to particular server
+	 * 
+	 * @param managerID
+	 * @param fn
+	 * @param ln
+	 * @param address
+	 * @param ph
+	 * @param spec
+	 * @param loc
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 * @throws ServerNotActiveException
+	 * @throws InvalidName 
+	 * @throws org.omg.CosNaming.NamingContextPackage.InvalidName 
+	 * @throws CannotProceed 
+	 * @throws NotFound 
+	 */
+	public static void connect_teacher(String managerID, String fn, String ln, String address, String ph, String spec,
+			String loc) throws NotBoundException, ServerNotActiveException, InvalidName, NotFound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
+		logger.info("Using createTRecord method.");
+		if (managerID.substring(0, 3).equals("MTL")) {
+			//registry = LocateRegistry.getRegistry(2964);
+			//Center stub = (Center) registry.lookup("MTLServer");
+			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
+			String arg[] = args1.split(" ");
+			ORB orb = ORB.init(arg, null);
+			org.omg.CORBA.Object objRef = orb.resolve_initial_references("MTL");
+			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+			String name = "MTLServer";
+			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));
+
+			if (centerImpl.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			//registry = LocateRegistry.getRegistry(1212);
+			//Center stub = (Center) registry.lookup("LVLServer");
+			/*if (stub.createTRecord(fn, ln, address, ph, spec, loc, managerID)) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}*/
+		} else {
+			//registry = LocateRegistry.getRegistry(1111);
+			//Center stub = (Center) registry.lookup("DDOServer");
+			/*if (stub.createTRecord(fn, ln, address, ph, spec, loc, managerID)) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}*/
+		}
+	}
+	
 
 	/**
 	 * Method to identify if the manager is exists or not
@@ -127,11 +195,9 @@ public class ManagerClient {
 	}
 
 	public static void main(String args[]) {
-		try {
-			
+		try {			
 			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
 			String arg[] = args1.split(" ");
-
 			ORB orb = ORB.init(arg, null);
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("MTL");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
@@ -160,11 +226,11 @@ public class ManagerClient {
 						System.out.println("\n Enter your choice : ");
 
 						Scanner s = new Scanner(System.in);
-						Integer status;
+						String status;
 						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName, temp;
 						String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
-						String[] courses;
-						String[] newValue = new String[5];
+						String courses;
+						String newValue;
 						Pattern pattern;
 						Matcher matcher;
 
@@ -186,8 +252,7 @@ public class ManagerClient {
 							loc = s.nextLine();
 							if (!firstName.equals("") && !lastName.equals("") && !address.equals("")
 									&& !phone.equals("") && !spec.equals("") && !loc.equals("")) {
-								// connect_teacher(managerID, firstName,
-								// lastName, address, phone, spec, loc);
+							connect_teacher(managerID, firstName,lastName, address, phone, spec, loc);
 							} else
 								System.out.println("Please enter all values.");
 							break;
@@ -199,20 +264,19 @@ public class ManagerClient {
 							System.out.println("Last Name : ");
 							lastName = s.nextLine();
 							System.out.println("Courses registered (separated with comma) : ");
-							temp = s.nextLine();
-							courses = temp.split(",");
+							//temp = s.nextLine();
+							//courses = temp.split(",");
+							courses=s.nextLine();
 							System.out.println("Status : (1 for active & 0 for deactive)");
-							String status1 = s.nextLine();
+							status = s.nextLine();
 							// s.nextLine();
 							System.out.println("Status Date : (DD/MM/YYYY)");
 							statusDate = s.nextLine();
 							pattern = Pattern.compile(DATE_PATTERN);
 							matcher = pattern.matcher(statusDate);
-							if (!firstName.equals("") && !lastName.equals("") && courses.length != 0
-									&& !status1.equals("") && !statusDate.equals("")) {
-								if (status1.equals("0") || status1.equals("1")) {
-									status = Integer.parseInt(status1);
-									if (matcher.matches() && (status.equals(0) || status.equals(1))) {
+							if (!firstName.equals("") && !lastName.equals("") && !status.equals("") && !statusDate.equals("")) {
+								if (status.equals("active") || status.equals("deactive")) {
+									if (matcher.matches() && (status.equals("active") || status.equals("deactive"))) {
 										// connect_student(managerID, firstName,
 										// lastName, courses, status,
 										// statusDate);
@@ -234,12 +298,8 @@ public class ManagerClient {
 							System.out.println("Field Name : ");
 							fieldName = s.nextLine();
 							System.out.println("New Value : ");
-							temp = s.nextLine();
-							if (!temp.equals("")) {
-								if (temp.contains(",")) {
-									newValue = temp.split(",");
-								} else
-									newValue[0] = temp;
+							newValue = s.nextLine();
+							if (!newValue.equals("")) {
 								// if (validate_edit(id, fieldName, newValue)) {
 								// connect_edit(managerID, fieldName, newValue,
 								// id);
