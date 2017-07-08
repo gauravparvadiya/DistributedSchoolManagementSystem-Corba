@@ -87,13 +87,13 @@ public class CenterServerMTL {
 
 			// get the root naming context
 			// NameService invokes the name service
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+			org.omg.CORBA.Object objRef = orb.resolve_initial_references("MTL");
 			// Use NamingContextExt which is part of the Interoperable
 			// Naming Service (INS) specification.
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
 			// bind the Object Reference in Naming
-			String name = "Hello";
+			String name = "MTLServer";
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 
