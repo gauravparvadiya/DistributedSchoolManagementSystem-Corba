@@ -89,7 +89,7 @@ public class CenterServerLVL {
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
 			// bind the Object Reference in Naming
-			String name = "Hello";
+			String name = "LVLServer";
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 

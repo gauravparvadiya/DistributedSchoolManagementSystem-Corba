@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.server.ServerNotActiveException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.helper.LogHelper;
-
 import com.users.Manager;
 
 import CorbaApp.Center;
@@ -34,7 +32,7 @@ import CorbaApp.CenterHelper;
 
 public class ManagerClient {
 
-	static Center centerImpl;
+	static Center centerImplMTL,centerImplLVL,centerImplDDO;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
 	public ArrayList<Manager> mtl, lvl, ddo;
 	JsonParser parser;
@@ -77,7 +75,7 @@ public class ManagerClient {
 			managerHashMap.put("DDO", ddo);
 		}
 	}
-	
+
 	/**
 	 * Method to connect the client to particular server
 	 * 
@@ -91,26 +89,17 @@ public class ManagerClient {
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 * @throws ServerNotActiveException
-	 * @throws InvalidName 
-	 * @throws org.omg.CosNaming.NamingContextPackage.InvalidName 
-	 * @throws CannotProceed 
-	 * @throws NotFound 
+	 * @throws InvalidName
+	 * @throws org.omg.CosNaming.NamingContextPackage.InvalidName
+	 * @throws CannotProceed
+	 * @throws NotFound
 	 */
 	public static void connect_teacher(String managerID, String fn, String ln, String address, String ph, String spec,
-			String loc) throws NotBoundException, ServerNotActiveException, InvalidName, NotFound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
+			String loc) throws NotBoundException, ServerNotActiveException, InvalidName, NotFound, CannotProceed,
+			org.omg.CosNaming.NamingContextPackage.InvalidName {
 		logger.info("Using createTRecord method.");
 		if (managerID.substring(0, 3).equals("MTL")) {
-			//registry = LocateRegistry.getRegistry(2964);
-			//Center stub = (Center) registry.lookup("MTLServer");
-			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
-			String arg[] = args1.split(" ");
-			ORB orb = ORB.init(arg, null);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			String name = "MTLServer";
-			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));
-
-			if (centerImpl.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
+			if (centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
 				System.out.println("Record created successfully. ");
 				logger.info("Teacher record created successfully.");
 			} else {
@@ -118,28 +107,29 @@ public class ManagerClient {
 				logger.error("Server returns error creating teacher record.");
 			}
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			//registry = LocateRegistry.getRegistry(1212);
-			//Center stub = (Center) registry.lookup("LVLServer");
-			/*if (stub.createTRecord(fn, ln, address, ph, spec, loc, managerID)) {
-				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
-			} else {
-				System.out.println("Something went wrong!!! ");
-				logger.error("Server returns error creating teacher record.");
-			}*/
+			// registry = LocateRegistry.getRegistry(1212);
+			// Center stub = (Center) registry.lookup("LVLServer");
+			/*
+			 * if (stub.createTRecord(fn, ln, address, ph, spec, loc,
+			 * managerID)) {
+			 * System.out.println("Record created successfully. ");
+			 * logger.info("Teacher record created successfully."); } else {
+			 * System.out.println("Something went wrong!!! ");
+			 * logger.error("Server returns error creating teacher record."); }
+			 */
 		} else {
-			//registry = LocateRegistry.getRegistry(1111);
-			//Center stub = (Center) registry.lookup("DDOServer");
-			/*if (stub.createTRecord(fn, ln, address, ph, spec, loc, managerID)) {
-				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
-			} else {
-				System.out.println("Something went wrong!!! ");
-				logger.error("Server returns error creating teacher record.");
-			}*/
+			// registry = LocateRegistry.getRegistry(1111);
+			// Center stub = (Center) registry.lookup("DDOServer");
+			/*
+			 * if (stub.createTRecord(fn, ln, address, ph, spec, loc,
+			 * managerID)) {
+			 * System.out.println("Record created successfully. ");
+			 * logger.info("Teacher record created successfully."); } else {
+			 * System.out.println("Something went wrong!!! ");
+			 * logger.error("Server returns error creating teacher record."); }
+			 */
 		}
 	}
-	
 
 	/**
 	 * Method to identify if the manager is exists or not
@@ -195,15 +185,19 @@ public class ManagerClient {
 	}
 
 	public static void main(String args[]) {
-		try {			
+		try {
 			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
 			String arg[] = args1.split(" ");
 			ORB orb = ORB.init(arg, null);
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			String name = "MTLServer";
-			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));
-			ManagerClient managerClient = new ManagerClient();
+			String mtl = "MTLServer";
+			centerImplMTL = CenterHelper.narrow(ncRef.resolve_str(mtl));
+			/*String lvl = "LVLServer";
+			centerImplLVL = CenterHelper.narrow(ncRef.resolve_str(lvl));
+			String ddo = "DDOServer";
+			centerImplDDO = CenterHelper.narrow(ncRef.resolve_str(ddo));
+*/			ManagerClient managerClient = new ManagerClient();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
@@ -252,7 +246,7 @@ public class ManagerClient {
 							loc = s.nextLine();
 							if (!firstName.equals("") && !lastName.equals("") && !address.equals("")
 									&& !phone.equals("") && !spec.equals("") && !loc.equals("")) {
-							connect_teacher(managerID, firstName,lastName, address, phone, spec, loc);
+								connect_teacher(managerID, firstName, lastName, address, phone, spec, loc);
 							} else
 								System.out.println("Please enter all values.");
 							break;
@@ -264,9 +258,9 @@ public class ManagerClient {
 							System.out.println("Last Name : ");
 							lastName = s.nextLine();
 							System.out.println("Courses registered (separated with comma) : ");
-							//temp = s.nextLine();
-							//courses = temp.split(",");
-							courses=s.nextLine();
+							// temp = s.nextLine();
+							// courses = temp.split(",");
+							courses = s.nextLine();
 							System.out.println("Status : (1 for active & 0 for deactive)");
 							status = s.nextLine();
 							// s.nextLine();
@@ -274,7 +268,8 @@ public class ManagerClient {
 							statusDate = s.nextLine();
 							pattern = Pattern.compile(DATE_PATTERN);
 							matcher = pattern.matcher(statusDate);
-							if (!firstName.equals("") && !lastName.equals("") && !status.equals("") && !statusDate.equals("")) {
+							if (!firstName.equals("") && !lastName.equals("") && !status.equals("")
+									&& !statusDate.equals("")) {
 								if (status.equals("active") || status.equals("deactive")) {
 									if (matcher.matches() && (status.equals("active") || status.equals("deactive"))) {
 										// connect_student(managerID, firstName,
@@ -325,7 +320,9 @@ public class ManagerClient {
 				}
 			} while (!managerID.equals("exit"));
 
-			centerImpl.shutdown();
+			centerImplMTL.shutdown();
+			centerImplLVL.shutdown();
+			centerImplDDO.shutdown();
 
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
