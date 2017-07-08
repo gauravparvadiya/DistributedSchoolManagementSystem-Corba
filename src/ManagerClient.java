@@ -101,10 +101,9 @@ public class ManagerClient {
 					System.out.println("Manager not found.");
 				}
 			} while (!managerID.equals("exit"));
-
 			
 			centerImpl.shutdown();
-
+			
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);

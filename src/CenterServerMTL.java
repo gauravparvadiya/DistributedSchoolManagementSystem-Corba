@@ -29,9 +29,6 @@ class CenterServerMTLImplementation extends CenterPOA {
 		return null;
 	}*/
 	
-	public String sayHello() {
-	    return "\nHello world !!\n";
-	  }
 
 	// implement shutdown() method
 	public void shutdown() {
@@ -63,8 +60,6 @@ class CenterServerMTLImplementation extends CenterPOA {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 	
 }
 
