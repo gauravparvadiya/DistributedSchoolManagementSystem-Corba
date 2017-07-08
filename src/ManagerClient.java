@@ -105,7 +105,7 @@ public class ManagerClient {
 			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
 			String arg[] = args1.split(" ");
 			ORB orb = ORB.init(arg, null);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("MTL");
+			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 			String name = "MTLServer";
 			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));
@@ -199,7 +199,7 @@ public class ManagerClient {
 			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
 			String arg[] = args1.split(" ");
 			ORB orb = ORB.init(arg, null);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("MTL");
+			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 			String name = "MTLServer";
 			centerImpl = CenterHelper.narrow(ncRef.resolve_str(name));

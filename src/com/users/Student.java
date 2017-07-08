@@ -4,8 +4,8 @@ public class Student {
 
 	private String fname;
 	private String lname;
-	private String[] coursesRegistered;
-	private Integer status;
+	private String coursesRegistered;
+	private String status;
 	private String statusDueDate;
 	private String id;
 	
@@ -27,7 +27,7 @@ public class Student {
 	 * @param statusDueDate
 	 * @param id
 	 */
-	public Student(String fname, String lname, String[] coursesRegistered, Integer status,
+	public Student(String fname, String lname, String coursesRegistered, String status,
 			String statusDueDate, String id) {
 		this.fname = fname;
 		this.lname = lname;
@@ -63,16 +63,16 @@ public class Student {
 	public void setLname(String lname) {
 		this.lname = lname;
 	}
-	public String[] getCoursesRegistered() {
+	public String getCoursesRegistered() {
 		return coursesRegistered;
 	}
-	public void setCoursesRegistered(String[] coursesRegistered) {
+	public void setCoursesRegistered(String coursesRegistered) {
 		this.coursesRegistered = coursesRegistered;
 	}
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public String getStatusDueDate() {
