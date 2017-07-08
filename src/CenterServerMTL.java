@@ -355,6 +355,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	
 	@Override
 	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
+		System.out.println(recordID);
 		Boolean result = false;
 		String result_string;
 		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);

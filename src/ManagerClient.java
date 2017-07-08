@@ -187,13 +187,12 @@ public class ManagerClient {
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 */
-	public static void connect_edit(String managerID, String fieldname, String newvalue, String id)
+	public static void connect_edit(String managerID, String id, String fieldname, String newvalue)
 			throws RemoteException, NotBoundException {
 		if (managerID.substring(0, 3).equals("MTL")) {
 			logger.debug("connected to registry 2964");
 			logger.debug("connected to Montreal server");
-			System.out.println(centerImplMTL.editRecord(id, fieldname, newvalue, managerID));
-			if (centerImplMTL.editRecord(id, fieldname, newvalue, managerID).equals("hi")) {
+			if (centerImplMTL.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
 				System.out.println("Record edited successfully.");
 			} else {
 				System.out.println("Error.");
@@ -455,7 +454,7 @@ public class ManagerClient {
 							newValue = s.nextLine();
 							if (!newValue.equals("")) {
 								if (validate_edit(id, fieldName, newValue)) {
-									connect_edit(managerID, fieldName, newValue, id);
+									connect_edit(managerID, id, fieldName, newValue);
 								}
 							} else {
 								System.out.println("Please enter all fields.");
