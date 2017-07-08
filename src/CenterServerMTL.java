@@ -2,7 +2,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +42,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	String lastSRecordId = new String();
 	String lastTRecordId = new String();
 	LogHelper helper;
-	Logger logger = Logger.getLogger(CenterServerMTL.class);
+	Logger logger = Logger.getLogger(CenterServerMTLImplementation.class);
 	
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -287,10 +293,64 @@ class CenterServerMTLImplementation extends CenterPOA {
 
 	@Override
 	public String getRecordCounts(String managerID) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(managerID + "| Using getRecordCounts method.");
+		DatagramSocket socket = null;
+		String responseMsg = new String();
+		try {
+			logger.info(managerID + "| Creating UDP connection with LVL and DDO server to get record counts.");
+			socket = new DatagramSocket();
+			byte[] message = "Record Count".getBytes();
+			InetAddress host = InetAddress.getByName("localhost");
+			DatagramPacket request = new DatagramPacket(message, message.length, host, 1212);
+			socket.send(request);
+			logger.info(managerID + "| Sent request to LVL server - localhost:1212");
+			byte[] buffer = new byte[10];
+			DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+			socket.receive(reply);
+			logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
+			responseMsg = new String(reply.getData());
+			socket.close();
+			logger.info(managerID + "| Connection closed with LVL server.");
+			socket = new DatagramSocket();
+			request = new DatagramPacket(message, message.length, host, 1111);
+			socket.send(request);
+			logger.info(managerID + "| Sent request to DDO server - localhost:1111");
+			buffer = new byte[10];
+			reply = new DatagramPacket(buffer, buffer.length);
+			socket.receive(reply);
+			logger.info(managerID + "| Reply from DDO server - " + new String(reply.getData()));
+			responseMsg = responseMsg + ", " + new String(reply.getData()) + ", MTL " + getCount();
+			socket.close();
+			logger.info(managerID + "| Connection closed with DDO server.");
+		} catch (SocketException e) {
+			logger.error(managerID + "| Error in socket connection | " + e.toString());
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			logger.error(managerID + "| Unknownhost exception | " + e.toString());
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error(managerID + "| IO exception | " + e.toString());
+			e.printStackTrace();
+		}
+
+		return responseMsg;
 	}
 
+	public int getCount() {
+		int counter = 0;
+		if (srtrRecords.size() > 0) {
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				counter += array.size();
+			}
+			return counter;
+		} else {
+			return 0;
+		}
+
+	}
+	
 	@Override
 	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
 		// TODO Auto-generated method stub
@@ -338,6 +398,21 @@ public class CenterServerMTL {
 
 			// wait for invocations from clients
 			orb.run();
+			
+			while (true) {
+				DatagramSocket socket = new DatagramSocket(2964);
+				byte[] buffer = new byte[1];
+				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+				socket.receive(request);
+				centerServerMTLImplementation.logger.info("Request received from : " + request.getAddress() + ":" + request.getPort());
+				String replyStr = "MTL : " + centerServerMTLImplementation.getCount();
+				byte[] buffer1 = replyStr.getBytes();
+				DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(), request.getPort());
+				socket.send(reply);
+				centerServerMTLImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+				socket.close();
+			}
+			
 		}
 
 		catch (Exception e) {
