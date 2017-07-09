@@ -723,14 +723,14 @@ public class CenterServerMTL {
 			    if (o instanceof Student) {
 					Student s = (Student) o;
 					int id = Integer.parseInt(centerServerMTLImplementation.lastSRecordId.substring(3, 8));
-					centerServerMTLImplementation.lastSRecordId = "DSR" + "" + ++id;
+					centerServerMTLImplementation.lastSRecordId = "MSR" + "" + ++id;
 					s.setId(centerServerMTLImplementation.lastSRecordId);
 					centerServerMTLImplementation.addToMap(s);
 					replyStr1 = "Record "+centerServerMTLImplementation.lastSRecordId+" is transferred to DDO.";
 				} else if (o instanceof Teacher) {
 					Teacher t = (Teacher) o;
 					int id = Integer.parseInt(centerServerMTLImplementation.lastTRecordId.substring(3, 8));
-					centerServerMTLImplementation.lastTRecordId = "DTR" + "" + ++id;
+					centerServerMTLImplementation.lastTRecordId = "MTR" + "" + ++id;
 					t.setId(centerServerMTLImplementation.lastTRecordId);
 					centerServerMTLImplementation.addToMap(t);
 					replyStr1 = "Record "+centerServerMTLImplementation.lastTRecordId+" is transferred to DDO.";
