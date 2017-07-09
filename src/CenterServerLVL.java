@@ -481,7 +481,9 @@ public class CenterServerLVL {
 	public static void main(String args[]) {
 		try {
 			// create and initialize the ORB
-			ORB orb = ORB.init(args, null);
+			String args1="-ORBInitialPort 1050 -ORBInitialHost localhost";
+			String arg[]=args1.split(" ");
+			ORB orb = ORB.init(arg, null);
 
 			// get reference to rootpoa & activate the POAManager
 			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
@@ -508,7 +510,7 @@ public class CenterServerLVL {
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 
-			System.out.println("HelloServer ready and waiting ...");
+			System.out.println("Laval Server ready and waiting ...");
 
 			// wait for invocations from clients
 			orb.run();

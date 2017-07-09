@@ -513,7 +513,7 @@ public class CenterServerMTL {
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 
-			System.out.println("HelloServer ready and waiting ...");
+			System.out.println("Montreal Server ready and waiting ...");
 
 			// wait for invocations from clients
 			orb.run();
