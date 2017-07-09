@@ -1,9 +1,13 @@
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -113,7 +117,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 	 * 
 	 * @param obj
 	 */
-	private void addToMap(Object obj) {
+	public void addToMap(Object obj) {
 
 		Student stud;
 		Teacher teach;
@@ -511,6 +515,185 @@ class CenterServerDDOImplementation extends CenterPOA {
 	
 	}
 
+	@Override
+	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
+		// TODO Auto-generated method stub
+		
+		if (recordID.substring(0, 3).equals("DSR")) {
+			Student s;
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				for (int j = 0; j < array.size(); j++) {
+					if (array.get(j) instanceof Student) {
+						s = (Student) array.get(j);
+						if (s.getId().equals(recordID)) {
+
+							if (remoteCenterServerName.equals("LVL")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with LVL server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(s);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to LVL server - localhost:1213");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with LVL server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							} else if (remoteCenterServerName.equals("MTL")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with MTL server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(s);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 2965);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to MTL server - localhost:2965");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from MTL server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with MTL server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							}
+						} else {
+							return "record not found...!!";
+						}
+					}
+				}
+			}
+		} else if (recordID.substring(0, 3).equals("DTR")) {
+			Teacher t;
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				for (int j = 0; j < array.size(); j++) {
+					if (array.get(j) instanceof Student) {
+						t = (Teacher) array.get(j);
+						if (t.getId().equals(recordID)) {
+
+							if (remoteCenterServerName.equals("LVL")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with LVL server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(t);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to LVL server - localhost:1213");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with LVL server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							} else if (remoteCenterServerName.equals("MTL")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with MTL server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(t);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 2965);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to MTL server - localhost:2965");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from MTL server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with MTL server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							}
+						} else {
+							return "record not found...!!";
+						}
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+
 }
 
 public class CenterServerDDO {
@@ -563,6 +746,36 @@ public class CenterServerDDO {
 				socket.send(reply);
 				centerServerDDOImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
 				socket.close();
+				
+				DatagramSocket socket1 = new DatagramSocket(1112);
+				byte[] buffer12 = new byte[1];
+				DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
+				socket1.receive(request1);
+				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
+			    ObjectInputStream is = new ObjectInputStream(in);
+			    Object o = is.readObject();
+			    String replyStr1 = null;
+			    if (o instanceof Student) {
+					Student s = (Student) o;
+					int id = Integer.parseInt(centerServerDDOImplementation.lastSRecordId.substring(3, 8));
+					centerServerDDOImplementation.lastSRecordId = "DSR" + "" + ++id;
+					s.setId(centerServerDDOImplementation.lastSRecordId);
+					centerServerDDOImplementation.addToMap(s);
+					replyStr1 = "Record "+centerServerDDOImplementation.lastSRecordId+" is transferred to DDO.";
+				} else if (o instanceof Teacher) {
+					Teacher t = (Teacher) o;
+					int id = Integer.parseInt(centerServerDDOImplementation.lastTRecordId.substring(3, 8));
+					centerServerDDOImplementation.lastTRecordId = "DTR" + "" + ++id;
+					t.setId(centerServerDDOImplementation.lastTRecordId);
+					centerServerDDOImplementation.addToMap(t);
+					replyStr1 = "Record "+centerServerDDOImplementation.lastTRecordId+" is transferred to DDO.";
+				}
+			    centerServerDDOImplementation.logger.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
+				byte[] buffer11 = replyStr1.getBytes();
+				DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(), request1.getPort());
+				socket1.send(reply1);
+				centerServerDDOImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+				socket1.close();
 			}
 		}
 

@@ -1,8 +1,12 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -33,7 +37,6 @@ import CorbaApp.Center;
 import CorbaApp.CenterHelper;
 import CorbaApp.CenterPOA;
 
-
 class CenterServerMTLImplementation extends CenterPOA {
 	private ORB orb;
 
@@ -44,11 +47,11 @@ class CenterServerMTLImplementation extends CenterPOA {
 	String lastTRecordId = new String();
 	LogHelper helper;
 	Logger logger = Logger.getLogger(CenterServerMTLImplementation.class);
-	
+
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
 	}
-	
+
 	public CenterServerMTLImplementation() throws Exception {
 		super();
 
@@ -89,7 +92,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	public void shutdown() {
 		orb.shutdown(false);
 	}
-	
+
 	/**
 	 * Method to add default records to the hashmap
 	 */
@@ -143,7 +146,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	 * 
 	 * @param obj
 	 */
-	private void addToMap(Object obj) {
+	public void addToMap(Object obj) {
 
 		Student stud;
 		Teacher teach;
@@ -265,7 +268,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 		srtrRecords.put("Y", y);
 		srtrRecords.put("Z", z);
 	}
-	
+
 	@Override
 	public String createTRecord(String managerID, String fname, String lastName, String address, String phone,
 			String specialization, String location) {
@@ -351,10 +354,10 @@ class CenterServerMTLImplementation extends CenterPOA {
 		}
 
 	}
-	
+
 	@Override
 	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
-		//System.out.println(recordID);
+		// System.out.println(recordID);
 		Boolean result = false;
 		String result_string;
 		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);
@@ -371,14 +374,14 @@ class CenterServerMTLImplementation extends CenterPOA {
 							logger.info(managerID + "| Record id " + recordID + " identified as a student.");
 							result = true;
 							if (fieldName.equals("status")) {
-								if (newValue.equals("active")||newValue.equals("deactive")) {
+								if (newValue.equals("active") || newValue.equals("deactive")) {
 									s.setStatus(newValue);
 									logger.info(
 											managerID + "| Record - " + recordID + " status changed to " + newValue);
-									result=true;
+									result = true;
 								} else {
 									logger.info(managerID + "| Entered invalid status number.");
-									result=false;
+									result = false;
 								}
 							} else if (fieldName.equals("statusDueDate")) {
 								Pattern pattern;
@@ -390,21 +393,21 @@ class CenterServerMTLImplementation extends CenterPOA {
 									s.setStatusDueDate(newValue);
 									logger.info(managerID + "| Record - " + recordID + " status date changed to "
 											+ newValue);
-									result=true;
+									result = true;
 								} else {
 									logger.info(managerID + "| Entered invalid date.");
-									result=false;
+									result = false;
 								}
 							} else if (fieldName.equals("coursesRegistered")) {
 								s.setCoursesRegistered(newValue);
 								logger.info(managerID + "| Record - " + recordID + " registered courses changed to "
 										+ newValue);
-								result=true;
+								result = true;
 							}
-							if(result)
-								result_string="hi";
+							if (result)
+								result_string = "hi";
 							else
-								result_string="bye";
+								result_string = "bye";
 							return result_string;
 						} else {
 							result = false;
@@ -413,7 +416,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 				}
 			}
 		} else if (recordID.substring(0, 3).equals("MTR")) {
-			//System.out.println("Edit teacher");
+			// System.out.println("Edit teacher");
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -422,30 +425,28 @@ class CenterServerMTLImplementation extends CenterPOA {
 					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
-							//System.out.println("Teacher found");
+							// System.out.println("Teacher found");
 							logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
 							result = true;
 							if (fieldName.equals("address")) {
 								t.setAddress(newValue);
-								logger.info(
-										managerID + "| Record - " + recordID + " address changed to " + newValue);
-								result=true;
+								logger.info(managerID + "| Record - " + recordID + " address changed to " + newValue);
+								result = true;
 							} else if (fieldName.equals("location")) {
 								t.setLocation(newValue);
-								logger.info(
-										managerID + "| Record - " + recordID + " location changed to " + newValue);
-								result=true;
+								logger.info(managerID + "| Record - " + recordID + " location changed to " + newValue);
+								result = true;
 							} else if (fieldName.equals("phone")) {
 								t.setPhone(newValue);
-								logger.info(managerID + "| Record - " + recordID + " phone number changed to "
-										+ newValue);
-								result=true;
-								
+								logger.info(
+										managerID + "| Record - " + recordID + " phone number changed to " + newValue);
+								result = true;
+
 							}
-							if(result)
-								result_string="hi";
+							if (result)
+								result_string = "hi";
 							else
-								result_string="bye";
+								result_string = "bye";
 							return result_string;
 						} else {
 							System.out.println("hiii");
@@ -462,20 +463,197 @@ class CenterServerMTLImplementation extends CenterPOA {
 		if (!result) {
 			logger.info(managerID + "| Record - " + recordID + " not found.");
 			System.out.println("no record found");
-			if(result)
-				result_string="hi";
+			if (result)
+				result_string = "hi";
 			else
-				result_string="bye";
+				result_string = "bye";
 			return result_string;
 		} else {
-			if(result)
-				result_string="hi";
+			if (result)
+				result_string = "hi";
 			else
-				result_string="bye";
+				result_string = "bye";
 			return result_string;
 		}
 	}
-	
+
+	@Override
+	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
+
+		if (recordID.substring(0, 3).equals("MSR")) {
+			Student s;
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				for (int j = 0; j < array.size(); j++) {
+					if (array.get(j) instanceof Student) {
+						s = (Student) array.get(j);
+						if (s.getId().equals(recordID)) {
+
+							if (remoteCenterServerName.equals("LVL")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with LVL server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(s);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to LVL server - localhost:1213");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with LVL server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							} else if (remoteCenterServerName.equals("DDO")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with DDO server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(s);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 1112);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to DDO server - localhost:1112");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from DDO server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with DDO server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							}
+						} else {
+							return "record not found...!!";
+						}
+					}
+				}
+			}
+		} else if (recordID.substring(0, 3).equals("MTR")) {
+			Teacher t;
+			for (int i = 65; i < 91; i++) {
+				String key = Character.toString((char) i);
+				ArrayList<Object> array = srtrRecords.get(key);
+				for (int j = 0; j < array.size(); j++) {
+					if (array.get(j) instanceof Student) {
+						t = (Teacher) array.get(j);
+						if (t.getId().equals(recordID)) {
+
+							if (remoteCenterServerName.equals("LVL")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with LVL server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(t);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to LVL server - localhost:1213");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with LVL server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							} else if (remoteCenterServerName.equals("DDO")) {
+								logger.info(managerID + "| Using transferRecord method.");
+								DatagramSocket socket = null;
+								String responseMsg = new String();
+								try {
+									logger.info(managerID
+											+ "| Creating UDP connection with DDO server to transfer record.");
+									socket = new DatagramSocket();
+									ByteArrayOutputStream out = new ByteArrayOutputStream();
+									ObjectOutputStream os = new ObjectOutputStream(out);
+									os.writeObject(t);
+									byte[] message = out.toByteArray();
+									InetAddress host = InetAddress.getByName("localhost");
+									DatagramPacket request = new DatagramPacket(message, message.length, host, 1112);
+									socket.send(request);
+									logger.info(managerID + "| Sent request to DDO server - localhost:1112");
+									byte[] buffer = new byte[10];
+									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+									socket.receive(reply);
+									logger.info(managerID + "| Reply from DDO server : " + new String(reply.getData()));
+									responseMsg = new String(reply.getData());
+									socket.close();
+									logger.info(managerID + "| Connection closed with DDO server.");
+								} catch (SocketException e) {
+									logger.error(managerID + "| Error in socket connection | " + e.toString());
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									logger.error(managerID + "| Unknownhost exception | " + e.toString());
+									e.printStackTrace();
+								} catch (IOException e) {
+									logger.error(managerID + "| IO exception | " + e.toString());
+									e.printStackTrace();
+								}
+								return responseMsg;
+							}
+						} else {
+							return "record not found...!!";
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 }
 
 public class CenterServerMTL {
@@ -483,9 +661,9 @@ public class CenterServerMTL {
 	public static void main(String args[]) {
 		try {
 			// create and initialize the ORB
-			String args1="-ORBInitialPort 1050 -ORBInitialHost localhost";
-			String arg[]=args1.split(" ");
-			
+			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
+			String arg[] = args1.split(" ");
+
 			ORB orb = ORB.init(arg, null);
 
 			// get reference to rootpoa & activate the POAManager
@@ -517,21 +695,54 @@ public class CenterServerMTL {
 
 			// wait for invocations from clients
 			orb.run();
-			
+
 			while (true) {
 				DatagramSocket socket = new DatagramSocket(2964);
 				byte[] buffer = new byte[1];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				socket.receive(request);
-				centerServerMTLImplementation.logger.info("Request received from : " + request.getAddress() + ":" + request.getPort());
+				centerServerMTLImplementation.logger
+						.info("Request received from : " + request.getAddress() + ":" + request.getPort());
 				String replyStr = "MTL : " + centerServerMTLImplementation.getCount();
 				byte[] buffer1 = replyStr.getBytes();
-				DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(), request.getPort());
+				DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
+						request.getPort());
 				socket.send(reply);
-				centerServerMTLImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+				centerServerMTLImplementation.logger
+						.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
 				socket.close();
+				
+				DatagramSocket socket1 = new DatagramSocket(2965);
+				byte[] buffer12 = new byte[1];
+				DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
+				socket1.receive(request1);
+				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
+			    ObjectInputStream is = new ObjectInputStream(in);
+			    Object o = is.readObject();
+			    String replyStr1 = null;
+			    if (o instanceof Student) {
+					Student s = (Student) o;
+					int id = Integer.parseInt(centerServerMTLImplementation.lastSRecordId.substring(3, 8));
+					centerServerMTLImplementation.lastSRecordId = "DSR" + "" + ++id;
+					s.setId(centerServerMTLImplementation.lastSRecordId);
+					centerServerMTLImplementation.addToMap(s);
+					replyStr1 = "Record "+centerServerMTLImplementation.lastSRecordId+" is transferred to DDO.";
+				} else if (o instanceof Teacher) {
+					Teacher t = (Teacher) o;
+					int id = Integer.parseInt(centerServerMTLImplementation.lastTRecordId.substring(3, 8));
+					centerServerMTLImplementation.lastTRecordId = "DTR" + "" + ++id;
+					t.setId(centerServerMTLImplementation.lastTRecordId);
+					centerServerMTLImplementation.addToMap(t);
+					replyStr1 = "Record "+centerServerMTLImplementation.lastTRecordId+" is transferred to DDO.";
+				}
+			    centerServerMTLImplementation.logger.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
+				byte[] buffer11 = replyStr1.getBytes();
+				DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(), request1.getPort());
+				socket1.send(reply1);
+				centerServerMTLImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+				socket1.close();
 			}
-			
+
 		}
 
 		catch (Exception e) {

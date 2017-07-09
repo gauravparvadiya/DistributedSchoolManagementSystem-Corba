@@ -11,6 +11,8 @@ module CorbaApp
 			
 	string editRecord(in string managerID,in string recordID,in string fieldName, in string newValue);
 	
+	string transferRecord(in string managerID,in string recordID,in string remoteCenterServerName);
+	
   	oneway void shutdown();
   };
 };
