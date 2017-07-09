@@ -107,27 +107,21 @@ public class ManagerClient {
 				logger.error("Server returns error creating teacher record.");
 			}
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			// registry = LocateRegistry.getRegistry(1212);
-			// Center stub = (Center) registry.lookup("LVLServer");
-			/*
-			 * if (stub.createTRecord(fn, ln, address, ph, spec, loc,
-			 * managerID)) {
-			 * System.out.println("Record created successfully. ");
-			 * logger.info("Teacher record created successfully."); } else {
-			 * System.out.println("Something went wrong!!! ");
-			 * logger.error("Server returns error creating teacher record."); }
-			 */
+			if (centerImplLVL.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}
 		} else {
-			// registry = LocateRegistry.getRegistry(1111);
-			// Center stub = (Center) registry.lookup("DDOServer");
-			/*
-			 * if (stub.createTRecord(fn, ln, address, ph, spec, loc,
-			 * managerID)) {
-			 * System.out.println("Record created successfully. ");
-			 * logger.info("Teacher record created successfully."); } else {
-			 * System.out.println("Something went wrong!!! ");
-			 * logger.error("Server returns error creating teacher record."); }
-			 */
+			if (centerImplDDO.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}
 		}
 	}
 
@@ -155,25 +149,21 @@ public class ManagerClient {
 				logger.error("Server returns error creating student record.");
 			}
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			/*
-			 * registry = LocateRegistry.getRegistry(1212); Center stub =
-			 * (Center) registry.lookup("LVLServer"); if (stub.createSRecord(fn,
-			 * ln, courses, status, statusDate, managerID)) {
-			 * System.out.println("Record created successfully.");
-			 * logger.info("Student record created successfully."); } else {
-			 * System.out.println("Something went wrong!!! ");
-			 * logger.error("Server returns error creating student record."); }
-			 */
+			if (centerImplLVL.createSRecord(managerID, fn, ln, courses, status, statusDate).equals("hi")) {
+				System.out.println("Record created successfully.");
+				logger.info("Student record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating student record.");
+			}
 		} else {
-			/*
-			 * registry = LocateRegistry.getRegistry(1111); Center stub =
-			 * (Center) registry.lookup("DDOServer"); if (stub.createSRecord(fn,
-			 * ln, courses, status, statusDate, managerID)) {
-			 * System.out.println("Record created successfully.");
-			 * logger.info("Student record created successfully."); } else {
-			 * System.out.println("Something went wrong!!! ");
-			 * logger.error("Server returns error creating student record."); }
-			 */
+			if (centerImplDDO.createSRecord(managerID, fn, ln, courses, status, statusDate).equals("hi")) {
+				System.out.println("Record created successfully.");
+				logger.info("Student record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating student record.");
+			}
 		}
 	}
 
@@ -190,7 +180,6 @@ public class ManagerClient {
 	public static void connect_edit(String managerID, String id, String fieldname, String newvalue)
 			throws RemoteException, NotBoundException {
 		if (managerID.substring(0, 3).equals("MTL")) {
-			logger.debug("connected to registry 2964");
 			logger.debug("connected to Montreal server");
 			if (centerImplMTL.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
 				System.out.println("Record edited successfully.");
@@ -198,23 +187,19 @@ public class ManagerClient {
 				System.out.println("Error.");
 			}
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			/*
-			 * registry = LocateRegistry.getRegistry(1212);
-			 * logger.debug("connected to registry 1212"); Center stub =
-			 * (Center) registry.lookup("LVLServer");
-			 * logger.debug("connected to Laval server"); if
-			 * (stub.editRecord(id, fieldname, newvalue, managerID)) {
-			 * System.out.println("Record edited successfully."); }
-			 */
+			logger.debug("connected to Laval server");
+			if (centerImplLVL.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
+				System.out.println("Record edited successfully.");
+			} else {
+				System.out.println("Error.");
+			}
 		} else {
-			/*
-			 * registry = LocateRegistry.getRegistry(1111);
-			 * logger.debug("connected to registry 1111"); Center stub =
-			 * (Center) registry.lookup("DDOServer");
-			 * logger.debug("connected to Dollard-des-Ormeaux server"); if
-			 * (stub.editRecord(id, fieldname, newvalue, managerID)) {
-			 * System.out.println("Record edited successfully."); }
-			 */
+			logger.debug("connected to DDO server");
+			if (centerImplDDO.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
+				System.out.println("Record edited successfully.");
+			} else {
+				System.out.println("Error.");
+			}
 		}
 		logger.info("Using editRecord method");
 	}
@@ -233,22 +218,14 @@ public class ManagerClient {
 			String reply = centerImplMTL.getRecordCounts(managerID);
 			System.out.println("Count : \n" + reply);
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			/*
-			 * registry = LocateRegistry.getRegistry(1212);
-			 * logger.debug("connected to registry 1212"); Center stub =
-			 * (Center) registry.lookup("LVLServer");
-			 * logger.debug("connected to Laval server"); String reply =
-			 * stub.getRecordCounts(managerID); System.out.println("Count : \n"
-			 * + reply);
-			 */ } else {
-			/*
-			 * registry = LocateRegistry.getRegistry(1111);
-			 * logger.debug("connected to registry 1111"); Center stub =
-			 * (Center) registry.lookup("DDOServer");
-			 * logger.debug("connected to Dollard-des-Ormeaux server"); String
-			 * reply = stub.getRecordCounts(managerID);
-			 * System.out.println("Count : \n" + reply);
-			 */ }
+			logger.debug("connected to Laval server");
+			String reply = centerImplLVL.getRecordCounts(managerID);
+			System.out.println("Count : \n" + reply);
+		} else {
+			logger.debug("connected to DDO server");
+			String reply = centerImplDDO.getRecordCounts(managerID);
+			System.out.println("Count : \n" + reply);
+		}
 	}
 
 	/**
@@ -350,14 +327,17 @@ public class ManagerClient {
 			ORB orb = ORB.init(arg, null);
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+			
 			String mtl = "MTLServer";
 			centerImplMTL = CenterHelper.narrow(ncRef.resolve_str(mtl));
-			/*
-			 * String lvl = "LVLServer"; centerImplLVL =
-			 * CenterHelper.narrow(ncRef.resolve_str(lvl)); String ddo =
-			 * "DDOServer"; centerImplDDO =
-			 * CenterHelper.narrow(ncRef.resolve_str(ddo));
-			 */ ManagerClient managerClient = new ManagerClient();
+
+			String lvl = "LVLServer";
+			centerImplLVL = CenterHelper.narrow(ncRef.resolve_str(lvl));
+			
+			String ddo = "DDOServer";
+			centerImplDDO = CenterHelper.narrow(ncRef.resolve_str(ddo));
+			
+			ManagerClient managerClient = new ManagerClient();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
