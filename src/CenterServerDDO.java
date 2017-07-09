@@ -519,7 +519,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
 		// TODO Auto-generated method stub
 		
-		if (recordID.substring(0, 3).equals("DSR")) {
+		if (recordID.substring(0, 3).equals("MSR") || recordID.substring(0, 3).equals("LSR")) {
 			Student s;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -562,6 +562,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							} else if (remoteCenterServerName.equals("MTL")) {
 								logger.info(managerID + "| Using transferRecord method.");
@@ -596,6 +597,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							}
 						} else {
@@ -604,7 +606,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 					}
 				}
 			}
-		} else if (recordID.substring(0, 3).equals("DTR")) {
+		} else if (recordID.substring(0, 3).equals("MTR") || recordID.substring(0, 3).equals("LTR")) {
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -647,6 +649,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							} else if (remoteCenterServerName.equals("MTL")) {
 								logger.info(managerID + "| Using transferRecord method.");
@@ -681,6 +684,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							}
 						} else {
@@ -754,6 +758,7 @@ public class CenterServerDDO {
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
 			    ObjectInputStream is = new ObjectInputStream(in);
 			    Object o = is.readObject();
+			    in.close();
 			    String replyStr1 = null;
 			    if (o instanceof Student) {
 					Student s = (Student) o;

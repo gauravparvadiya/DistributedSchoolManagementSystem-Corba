@@ -481,7 +481,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 	@Override
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
 		// TODO Auto-generated method stub
-		if (recordID.substring(0, 3).equals("LSR")) {
+		if (recordID.substring(0, 3).equals("MSR") || recordID.substring(0, 3).equals("DSR")) {
 			Student s;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -524,6 +524,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							} else if (remoteCenterServerName.equals("MTL")) {
 								logger.info(managerID + "| Using transferRecord method.");
@@ -558,6 +559,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							}
 						} else {
@@ -566,7 +568,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 					}
 				}
 			}
-		} else if (recordID.substring(0, 3).equals("LTR")) {
+		} else if (recordID.substring(0, 3).equals("MTR") || recordID.substring(0, 3).equals("DTR")) {
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -609,6 +611,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							} else if (remoteCenterServerName.equals("MTL")) {
 								logger.info(managerID + "| Using transferRecord method.");
@@ -643,6 +646,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							}
 						} else {
@@ -717,6 +721,7 @@ public class CenterServerLVL {
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
 			    ObjectInputStream is = new ObjectInputStream(in);
 			    Object o = is.readObject();
+			    in.close();
 			    String replyStr1 = null;
 			    if (o instanceof Student) {
 					Student s = (Student) o;
@@ -739,8 +744,6 @@ public class CenterServerLVL {
 				socket1.send(reply1);
 				centerServerLVLImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
 				socket1.close();
-				
-				
 			}
 			
 		}

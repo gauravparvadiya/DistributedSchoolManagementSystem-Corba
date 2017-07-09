@@ -480,7 +480,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	@Override
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
 
-		if (recordID.substring(0, 3).equals("MSR")) {
+		if (recordID.substring(0, 3).equals("LSR") || recordID.substring(0, 3).equals("DSR")) {
 			Student s;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -489,7 +489,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
-
+							
 							if (remoteCenterServerName.equals("LVL")) {
 								logger.info(managerID + "| Using transferRecord method.");
 								DatagramSocket socket = null;
@@ -524,6 +524,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							} else if (remoteCenterServerName.equals("DDO")) {
 								logger.info(managerID + "| Using transferRecord method.");
@@ -558,6 +559,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							}
 						} else {
@@ -566,7 +568,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 					}
 				}
 			}
-		} else if (recordID.substring(0, 3).equals("MTR")) {
+		} else if (recordID.substring(0, 3).equals("LTR") || recordID.substring(0, 3).equals("DTR")) {
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -609,6 +611,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							} else if (remoteCenterServerName.equals("DDO")) {
 								logger.info(managerID + "| Using transferRecord method.");
@@ -643,6 +646,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 									logger.error(managerID + "| IO exception | " + e.toString());
 									e.printStackTrace();
 								}
+								array.remove(j);
 								return responseMsg;
 							}
 						} else {
@@ -720,6 +724,7 @@ public class CenterServerMTL {
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
 			    ObjectInputStream is = new ObjectInputStream(in);
 			    Object o = is.readObject();
+			    in.close();
 			    String replyStr1 = null;
 			    if (o instanceof Student) {
 					Student s = (Student) o;
@@ -727,14 +732,14 @@ public class CenterServerMTL {
 					centerServerMTLImplementation.lastSRecordId = "MSR" + "" + ++id;
 					s.setId(centerServerMTLImplementation.lastSRecordId);
 					centerServerMTLImplementation.addToMap(s);
-					replyStr1 = "Record "+centerServerMTLImplementation.lastSRecordId+" is transferred to DDO.";
+					replyStr1 = "Success";
 				} else if (o instanceof Teacher) {
 					Teacher t = (Teacher) o;
 					int id = Integer.parseInt(centerServerMTLImplementation.lastTRecordId.substring(3, 8));
 					centerServerMTLImplementation.lastTRecordId = "MTR" + "" + ++id;
 					t.setId(centerServerMTLImplementation.lastTRecordId);
 					centerServerMTLImplementation.addToMap(t);
-					replyStr1 = "Record "+centerServerMTLImplementation.lastTRecordId+" is transferred to DDO.";
+					replyStr1 = "Success";
 				}
 			    centerServerMTLImplementation.logger.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
 				byte[] buffer11 = replyStr1.getBytes();
