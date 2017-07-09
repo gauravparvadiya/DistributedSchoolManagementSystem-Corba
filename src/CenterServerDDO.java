@@ -276,11 +276,11 @@ class CenterServerDDOImplementation extends CenterPOA {
 			if (array != null) {
 				for (int i = 7; i < 10; i++) {
 					JsonObject object = (JsonObject) array.get(i);
-					JsonArray courseList = object.get("coursesRegistered").getAsJsonArray();
-					String[] coursesRegistered = new String[courseList.size()];
-					for (int j = 0; j < courseList.size(); j++) {
-						coursesRegistered[j] = courseList.get(j).getAsString();
-					}
+					//JsonArray courseList = object.get("coursesRegistered").getAsJsonArray();
+					//String[] coursesRegistered = new String[courseList.size()];
+					//for (int j = 0; j < courseList.size(); j++) {
+						//coursesRegistered[j] = courseList.get(j).getAsString();
+					//}
 					Student s = new Student(object.get("fname").getAsString(), object.get("lname").getAsString(),
 							object.get("coursesRegistered").getAsString(), object.get("status").getAsString(),
 							object.get("statusDueDate").getAsString(), object.get("id").getAsString());
@@ -610,7 +610,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
 				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Student) {
+					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
 
@@ -730,7 +730,7 @@ public class CenterServerDDO {
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 
-			System.out.println("HelloServer ready and waiting ...");
+			System.out.println("DDOServer ready and waiting ...");
 
 			// wait for invocations from clients
 			orb.run();

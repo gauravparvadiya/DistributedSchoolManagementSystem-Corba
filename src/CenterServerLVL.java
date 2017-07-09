@@ -572,7 +572,7 @@ class CenterServerLVLImplementation extends CenterPOA {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
 				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Student) {
+					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
 

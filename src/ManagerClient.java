@@ -229,6 +229,35 @@ public class ManagerClient {
 	}
 
 	/**
+	 * 
+	 * @param managerID
+	 * @param id
+	 * @param server_name
+	 */
+	public static void connect_transfer(String managerID, String id, String server_name) throws RemoteException, NotBoundException {
+		logger.info("Using transfer record method.");
+		if (managerID.substring(0, 3).equals("MTL")) {
+			logger.debug("connected to Montreal server");
+			if(!centerImplMTL.transferRecord(managerID, id, server_name).equals("record not found...!!"))
+				System.out.println("tansfer successful");
+			else
+				System.out.println("error.");
+		} else if (!managerID.substring(0, 3).equals("LVL")) {
+			logger.debug("connected to Laval server");
+			if(centerImplLVL.transferRecord(managerID, id, server_name).equals("record not found...!!"))
+				System.out.println("tansfer successful");
+			else
+				System.out.println("error.");
+		} else {
+			logger.debug("connected to DDO server");
+			if(!centerImplDDO.transferRecord(managerID, id, server_name).equals("record not found...!!"))
+				System.out.println("tansfer successful");
+			else
+				System.out.println("error.");
+		}
+	}
+
+	/**
 	 * Method to validate the edit method parameters
 	 * 
 	 * @param id
@@ -327,16 +356,16 @@ public class ManagerClient {
 			ORB orb = ORB.init(arg, null);
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			
+
 			String mtl = "MTLServer";
 			centerImplMTL = CenterHelper.narrow(ncRef.resolve_str(mtl));
 
 			String lvl = "LVLServer";
 			centerImplLVL = CenterHelper.narrow(ncRef.resolve_str(lvl));
-			
+
 			String ddo = "DDOServer";
 			centerImplDDO = CenterHelper.narrow(ncRef.resolve_str(ddo));
-			
+
 			ManagerClient managerClient = new ManagerClient();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
@@ -362,7 +391,8 @@ public class ManagerClient {
 
 						Scanner s = new Scanner(System.in);
 						String status;
-						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName, temp,server_name;
+						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName, temp,
+								server_name;
 						String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
 						String courses;
 						String newValue;
@@ -447,6 +477,7 @@ public class ManagerClient {
 							id = s.nextLine();
 							System.out.println("Server name : (MTL/LVL/DDO)");
 							server_name = s.nextLine();
+							connect_transfer(managerID, id, server_name);
 							break;
 						case "6":
 							File file = new File("log/" + managerID + ".log");

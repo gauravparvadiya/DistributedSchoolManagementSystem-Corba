@@ -511,6 +511,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 									socket.receive(reply);
 									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
 									responseMsg = new String(reply.getData());
+									System.out.println(responseMsg);
 									socket.close();
 									logger.info(managerID + "| Connection closed with LVL server.");
 								} catch (SocketException e) {
@@ -571,7 +572,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
 				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Student) {
+					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
 
