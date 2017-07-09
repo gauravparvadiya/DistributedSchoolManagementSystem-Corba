@@ -354,14 +354,15 @@ public class ManagerClient {
 						System.out.println(" 2. Create Student ");
 						System.out.println(" 3. Get Record Counts ");
 						System.out.println(" 4. Edit Record ");
-						System.out.println(" 5. Exit");
+						System.out.println(" 5. Transfer Record ");
+						System.out.println(" 6. Exit");
 
 						reader = new BufferedReader(new InputStreamReader(System.in));
 						System.out.println("\n Enter your choice : ");
 
 						Scanner s = new Scanner(System.in);
 						String status;
-						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName, temp;
+						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName, temp,server_name;
 						String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
 						String courses;
 						String newValue;
@@ -441,6 +442,13 @@ public class ManagerClient {
 							}
 							break;
 						case "5":
+							System.out.println("Enter information to transfer : ");
+							System.out.println("ID : (e.g. MTR00001/MSR10001)");
+							id = s.nextLine();
+							System.out.println("Server name : (MTL/LVL/DDO)");
+							server_name = s.nextLine();
+							break;
+						case "6":
 							File file = new File("log/" + managerID + ".log");
 							file.delete();
 							System.out.println("Bye Bye!!!");
