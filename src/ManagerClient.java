@@ -498,7 +498,7 @@ public class ManagerClient {
 
 			centerImplMTL.shutdown();
 			centerImplLVL.shutdown();
-			centerImplDDO.shutdown();
+			centerImplDDO.shutdown();   
 
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
