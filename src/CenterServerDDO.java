@@ -242,7 +242,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 	 * 
 	 * @return
 	 */
-	private int getCount() {
+	public int getCount() {
 		int counter = 0;
 		if (srtrRecords.size() > 0) {
 			for (int i = 65; i < 91; i++) {
@@ -259,7 +259,7 @@ class CenterServerDDOImplementation extends CenterPOA {
 	/**
 	 * Method to add default records to the hashmap
 	 */
-	private void addDefaultRecords() {
+	public void addDefaultRecords() {
 		File student = new File("res/student.json");
 		File teacher = new File("res/teacher.json");
 		Reader reader;
@@ -526,6 +526,7 @@ public class CenterServerDDO {
 
 			// create servant and register it with the ORB
 			CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
+			centerServerDDOImplementation.addDefaultRecords();
 			centerServerDDOImplementation.setORB(orb);
 
 			// get object reference from the servant
@@ -548,6 +549,19 @@ public class CenterServerDDO {
 
 			// wait for invocations from clients
 			orb.run();
+			while (true) {
+				DatagramSocket socket = new DatagramSocket(1111);
+				byte[] buffer = new byte[1];
+				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+				socket.receive(request);
+				centerServerDDOImplementation.logger.info("Request received from : " + request.getAddress() + ":" + request.getPort());
+				String replyStr = "DDO  " + centerServerDDOImplementation.getCount();
+				byte[] buffer1 = replyStr.getBytes();
+				DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(), request.getPort());
+				socket.send(reply);
+				centerServerDDOImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+				socket.close();
+			}
 		}
 
 		catch (Exception e) {
