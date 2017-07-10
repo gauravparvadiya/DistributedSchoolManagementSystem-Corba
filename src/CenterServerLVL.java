@@ -22,17 +22,11 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
-import org.omg.PortableServer.POAPackage.ServantNotActive;
-import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -51,8 +45,8 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 	public HashMap<String, ArrayList<Object>> srtrRecords;
 	public ArrayList<Object> srtrLVL, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
 	JsonParser parser;
-	String lastSRecordId = new String();
-	String lastTRecordId = new String();
+	public String lastSRecordId = new String();
+	public String lastTRecordId = new String();
 	LogHelper helper;
 	Logger logger = Logger.getLogger(CenterServerLVLImplementation.class);
 
@@ -668,90 +662,133 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 
 }
 
-public class CenterServerLVL {
+public class CenterServerLVL extends Thread {
 
 	public static void main(String args[]) {
-		try {
-			CenterServerLVL centerServerLVL;
-			CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
-			centerServerLVLImplementation.addDefaultRecords();
-			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
-			String arg[] = args1.split(" ");
-			ORB orb = ORB.init(arg, null);
-			POA rootpoa;
-			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			rootpoa.the_POAManager().activate();
-			centerServerLVLImplementation.setORB(orb);
-			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerLVLImplementation);
-			Center href = CenterHelper.narrow(ref);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			String name = "LVLServer";
-			NameComponent path[] = ncRef.to_name(name);
-			ncRef.rebind(path, href);
-			System.out.println("LVL Server ready and waiting ...");
-//			orb.run();
+		new Thread(new Runnable() {
 
-			//while (true) {
-				DatagramSocket socket = new DatagramSocket(1212);
-				byte[] buffer = new byte[1];
-				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-				socket.receive(request);
-				centerServerLVLImplementation.logger
-						.info("Request received from : " + request.getAddress() + ":" + request.getPort());
-				System.out.println("here2");
-				String replyStr = "LVL  " + centerServerLVLImplementation.getCount();
-				byte[] buffer1 = replyStr.getBytes();
-				DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
-						request.getPort());
-				socket.send(reply);
-				centerServerLVLImplementation.logger
-						.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
-				socket.close();
-
-				DatagramSocket socket1 = new DatagramSocket(1213);
-				byte[] buffer12 = new byte[1];
-				DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
-				socket1.receive(request1);
-				ByteArrayInputStream in = new ByteArrayInputStream(request1.getData());
-				ObjectInputStream is = new ObjectInputStream(in);
-				Object o = is.readObject();
-				String replyStr1 = null;
-				if (o instanceof Student) {
-					Student s = (Student) o;
-					int id = Integer.parseInt(centerServerLVLImplementation.lastSRecordId.substring(3, 8));
-					centerServerLVLImplementation.lastSRecordId = "LSR" + "" + ++id;
-					s.setId(centerServerLVLImplementation.lastSRecordId);
-					centerServerLVLImplementation.addToMap(s);
-					replyStr1 = "Record " + centerServerLVLImplementation.lastSRecordId + " is transferred to Laval.";
-				} else if (o instanceof Teacher) {
-					Teacher t = (Teacher) o;
-					int id = Integer.parseInt(centerServerLVLImplementation.lastTRecordId.substring(3, 8));
-					centerServerLVLImplementation.lastTRecordId = "LTR" + "" + ++id;
-					t.setId(centerServerLVLImplementation.lastTRecordId);
-					centerServerLVLImplementation.addToMap(t);
-					replyStr1 = "Record " + centerServerLVLImplementation.lastTRecordId + " is transferred to Laval.";
+			@Override
+			public void run() {
+				try {
+					CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
+					centerServerLVLImplementation.addDefaultRecords();
+					String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
+					String arg[] = args1.split(" ");
+					ORB orb = ORB.init(arg, null);
+					POA rootpoa;
+					rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+					rootpoa.the_POAManager().activate();
+					centerServerLVLImplementation.setORB(orb);
+					org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerLVLImplementation);
+					Center href = CenterHelper.narrow(ref);
+					org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+					NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+					String name = "LVLServer";
+					NameComponent path[] = ncRef.to_name(name);
+					ncRef.rebind(path, href);
+					System.out.println("LVL Server ready and waiting ...");
+					Thread t2 = new Thread();
+					t2.start();
+					orb.run();
+				} catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
 				}
-				centerServerLVLImplementation.logger
-						.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
-				byte[] buffer11 = replyStr1.getBytes();
-				DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(),
-						request1.getPort());
-				socket1.send(reply1);
-				centerServerLVLImplementation.logger
-						.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
-				socket1.close();
-			//}
-				orb.run();
+			}
+		}).start();
 
-		}
+		new Thread(new Runnable() {
 
-		catch (Exception e) {
-			System.err.println("ERROR: " + e);
-			e.printStackTrace(System.out);
-		}
+			@Override
+			public void run() {
+				try {
 
-		System.out.println("HelloServer Exiting ...");
+					while (true) {
+						CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
+						centerServerLVLImplementation.addDefaultRecords();
+						DatagramSocket socket = new DatagramSocket(1212);
+						byte[] buffer = new byte[1000];
+						DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+						socket.receive(request);
+						centerServerLVLImplementation.logger
+								.info("Request received from : " + request.getAddress() + ":" + request.getPort());
+						String replyStr = "LVL  " + centerServerLVLImplementation.getCount();
+						byte[] buffer1 = replyStr.getBytes();
+						DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
+								request.getPort());
+						socket.send(reply);
+						centerServerLVLImplementation.logger
+								.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+						socket.close();
 
+						
+						// orb.run();
+					}
+				}
+
+				catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
+				}
+
+				System.out.println("HelloServer Exiting ...");
+
+			}
+		}).start();
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try{
+					CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
+					centerServerLVLImplementation.addDefaultRecords();
+					DatagramSocket socket1 = new DatagramSocket(1213);
+					centerServerLVLImplementation.logger.info("socket created" + socket1.getPort());
+					byte[] buffer12 = new byte[1000];
+					DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
+					centerServerLVLImplementation.logger.info("request created");
+					socket1.receive(request1);
+					centerServerLVLImplementation.logger.info("request received");
+					ByteArrayInputStream in = new ByteArrayInputStream(request1.getData());
+					// System.out.println(request1.getLength());
+					ObjectInputStream is = new ObjectInputStream(in);
+					Object o = is.readObject();
+					String replyStr1 = null;
+					if (o instanceof Student) {
+						Student s = (Student) o;
+						int id = Integer.parseInt(centerServerLVLImplementation.lastSRecordId.substring(3, 8));
+						centerServerLVLImplementation.lastSRecordId = "LSR" + "" + ++id;
+						s.setId(centerServerLVLImplementation.lastSRecordId);
+						centerServerLVLImplementation.addToMap(s);
+						replyStr1 = "Record " + centerServerLVLImplementation.lastSRecordId
+								+ " is transferred to Laval.";
+					} else if (o instanceof Teacher) {
+						Teacher t = (Teacher) o;
+						System.out.println("hi");
+						System.out.println(centerServerLVLImplementation.lastSRecordId.length());
+						int id = Integer.parseInt(centerServerLVLImplementation.lastTRecordId.substring(3, 8));
+						centerServerLVLImplementation.lastTRecordId = "LTR" + "" + ++id;
+						t.setId(centerServerLVLImplementation.lastTRecordId);
+						centerServerLVLImplementation.addToMap(t);
+						replyStr1 = "Record " + centerServerLVLImplementation.lastTRecordId
+								+ " is transferred to Laval.";
+					}
+					centerServerLVLImplementation.logger
+							.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
+					byte[] buffer11 = replyStr1.getBytes();
+					DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(),
+							request1.getPort());
+					socket1.send(reply1);
+					centerServerLVLImplementation.logger
+							.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
+					socket1.close();
+				}
+				catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
+				}
+			}
+		}).start();
 	}
 }

@@ -22,22 +22,18 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
-import org.omg.PortableServer.POAPackage.ServantNotActive;
-import org.omg.PortableServer.POAPackage.WrongPolicy;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.helper.LogHelper;
 import com.users.Student;
 import com.users.Teacher;
-import com.google.gson.*;
 
 import CorbaApp.Center;
 import CorbaApp.CenterHelper;
@@ -707,86 +703,124 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 
 }
 
-public class CenterServerDDO {
+public class CenterServerDDO extends Thread {
 
 	public static void main(String args[]) {
-		try {
+		new Thread(new Runnable() {
 
-			CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
-			centerServerDDOImplementation.addDefaultRecords();
-			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
-			String arg[] = args1.split(" ");
-			ORB orb = ORB.init(arg, null);
-			POA rootpoa;
-			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			rootpoa.the_POAManager().activate();
-			centerServerDDOImplementation.setORB(orb);
-			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerDDOImplementation);
-			Center href = CenterHelper.narrow(ref);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			String name = "DDOServer";
-			NameComponent path[] = ncRef.to_name(name);
-			ncRef.rebind(path, href);
-			System.out.println("DDOServer ready and waiting ...");
-//			orb.run();
-			//while (true) {
-				// orb.destroy();
-				DatagramSocket socket = new DatagramSocket(1111);
-				byte[] buffer = new byte[1];
-				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-				socket.receive(request);
-				centerServerDDOImplementation.logger
-						.info("Request received from : " + request.getAddress() + ":" + request.getPort());
-				String replyStr = "DDO  " + centerServerDDOImplementation.getCount();
-				byte[] buffer1 = replyStr.getBytes();
-				DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
-						request.getPort());
-				socket.send(reply);
-				centerServerDDOImplementation.logger
-						.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
-				socket.close();
-
-				DatagramSocket socket1 = new DatagramSocket(1112);
-				byte[] buffer12 = new byte[1];
-				DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
-				socket1.receive(request1);
-				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
-				ObjectInputStream is = new ObjectInputStream(in);
-				Object o = is.readObject();
-				String replyStr1 = null;
-				if (o instanceof Student) {
-					Student s = (Student) o;
-					int id = Integer.parseInt(centerServerDDOImplementation.lastSRecordId.substring(3, 8));
-					centerServerDDOImplementation.lastSRecordId = "DSR" + "" + ++id;
-					s.setId(centerServerDDOImplementation.lastSRecordId);
-					centerServerDDOImplementation.addToMap(s);
-					replyStr1 = "Record " + centerServerDDOImplementation.lastSRecordId + " is transferred to DDO.";
-				} else if (o instanceof Teacher) {
-					Teacher t = (Teacher) o;
-					int id = Integer.parseInt(centerServerDDOImplementation.lastTRecordId.substring(3, 8));
-					centerServerDDOImplementation.lastTRecordId = "DTR" + "" + ++id;
-					t.setId(centerServerDDOImplementation.lastTRecordId);
-					centerServerDDOImplementation.addToMap(t);
-					replyStr1 = "Record " + centerServerDDOImplementation.lastTRecordId + " is transferred to DDO.";
+			@Override
+			public void run() {
+				try {
+					CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
+					centerServerDDOImplementation.addDefaultRecords();
+					String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
+					String arg[] = args1.split(" ");
+					ORB orb = ORB.init(arg, null);
+					POA rootpoa;
+					rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+					rootpoa.the_POAManager().activate();
+					centerServerDDOImplementation.setORB(orb);
+					org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerDDOImplementation);
+					Center href = CenterHelper.narrow(ref);
+					org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+					NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+					String name = "DDOServer";
+					NameComponent path[] = ncRef.to_name(name);
+					ncRef.rebind(path, href);
+					System.out.println("DDOServer ready and waiting ...");
+					orb.run();
+				} catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
 				}
-				centerServerDDOImplementation.logger
-						.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
-				byte[] buffer11 = replyStr1.getBytes();
-				DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(),
-						request1.getPort());
-				socket1.send(reply1);
-				centerServerDDOImplementation.logger
-						.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
-				socket1.close();
-			//}
-				orb.run();
+			}
+		}).start();
 
-		} catch (Exception e) {
-			System.err.println("ERROR: " + e);
-			e.printStackTrace(System.out);
-		}
-		System.out.println("HelloServer Exiting ...");
+		new Thread(new Runnable() {
 
+			@Override
+			public void run() {
+				try {
+
+					while (true) {
+						// orb.destroy();
+						CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
+						centerServerDDOImplementation.addDefaultRecords();
+						DatagramSocket socket = new DatagramSocket(1111);
+						byte[] buffer = new byte[1000];
+						DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+						socket.receive(request);
+						centerServerDDOImplementation.logger
+								.info("Request received from : " + request.getAddress() + ":" + request.getPort());
+						String replyStr = "DDO  " + centerServerDDOImplementation.getCount();
+						byte[] buffer1 = replyStr.getBytes();
+						DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
+								request.getPort());
+						socket.send(reply);
+						centerServerDDOImplementation.logger
+								.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+						socket.close();
+
+					}
+
+				} catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
+				}
+				System.out.println("HelloServer Exiting ...");
+
+			}
+		}).start();
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					while (true) {
+						CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
+						centerServerDDOImplementation.addDefaultRecords();
+						DatagramSocket socket1 = new DatagramSocket(1112);
+						byte[] buffer12 = new byte[1000];
+						DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
+						socket1.receive(request1);
+						ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
+						ObjectInputStream is = new ObjectInputStream(in);
+						Object o = is.readObject();
+						String replyStr1 = null;
+						if (o instanceof Student) {
+							Student s = (Student) o;
+							int id = Integer.parseInt(centerServerDDOImplementation.lastSRecordId.substring(3, 8));
+							centerServerDDOImplementation.lastSRecordId = "DSR" + "" + ++id;
+							s.setId(centerServerDDOImplementation.lastSRecordId);
+							centerServerDDOImplementation.addToMap(s);
+							replyStr1 = "Record " + centerServerDDOImplementation.lastSRecordId
+									+ " is transferred to DDO.";
+						} else if (o instanceof Teacher) {
+							Teacher t = (Teacher) o;
+							int id = Integer.parseInt(centerServerDDOImplementation.lastTRecordId.substring(3, 8));
+							centerServerDDOImplementation.lastTRecordId = "DTR" + "" + ++id;
+							t.setId(centerServerDDOImplementation.lastTRecordId);
+							centerServerDDOImplementation.addToMap(t);
+							replyStr1 = "Record " + centerServerDDOImplementation.lastTRecordId
+									+ " is transferred to DDO.";
+						}
+						centerServerDDOImplementation.logger
+								.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
+						byte[] buffer11 = replyStr1.getBytes();
+						DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(),
+								request1.getPort());
+						socket1.send(reply1);
+						centerServerDDOImplementation.logger
+								.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
+						socket1.close();
+					}
+				} catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
+				}
+			}
+		}).start();
 	}
+
 }
