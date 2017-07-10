@@ -507,7 +507,7 @@ class CenterServerMTLImplementation extends CenterPOA implements Serializable {
 									socket = new DatagramSocket();
 									ByteArrayOutputStream out = new ByteArrayOutputStream();
 									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(s);
+									os.writeObject((Object)s);
 									byte[] message = out.toByteArray();
 									InetAddress host = InetAddress.getByName("localhost");
 									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
@@ -690,9 +690,9 @@ public class CenterServerMTL {
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 			System.out.println("MTL Server ready and waiting ...");
-			orb.run();
+			//orb.run();
 
-			while (true) {
+			//while (true) {
 				// orb.destroy();
 				DatagramSocket socket = new DatagramSocket(2964);
 				byte[] buffer = new byte[1000];
@@ -741,7 +741,8 @@ public class CenterServerMTL {
 				centerServerMTLImplementation.logger
 						.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
 				socket1.close();
-			}
+			//}
+				orb.run();
 
 		}
 

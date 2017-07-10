@@ -672,7 +672,7 @@ public class CenterServerLVL {
 
 	public static void main(String args[]) {
 		try {
-
+			CenterServerLVL centerServerLVL;
 			CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
 			centerServerLVLImplementation.addDefaultRecords();
 			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
@@ -690,9 +690,9 @@ public class CenterServerLVL {
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 			System.out.println("LVL Server ready and waiting ...");
-			orb.run();
+//			orb.run();
 
-			while (true) {
+			//while (true) {
 				DatagramSocket socket = new DatagramSocket(1212);
 				byte[] buffer = new byte[1];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -713,7 +713,7 @@ public class CenterServerLVL {
 				byte[] buffer12 = new byte[1];
 				DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
 				socket1.receive(request1);
-				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
+				ByteArrayInputStream in = new ByteArrayInputStream(request1.getData());
 				ObjectInputStream is = new ObjectInputStream(in);
 				Object o = is.readObject();
 				String replyStr1 = null;
@@ -741,7 +741,9 @@ public class CenterServerLVL {
 				centerServerLVLImplementation.logger
 						.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
 				socket1.close();
-			}
+			//}
+				orb.run();
+
 		}
 
 		catch (Exception e) {

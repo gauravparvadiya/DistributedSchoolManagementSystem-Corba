@@ -729,9 +729,8 @@ public class CenterServerDDO {
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
 			System.out.println("DDOServer ready and waiting ...");
-			orb.run();
-
-			while (true) {
+//			orb.run();
+			//while (true) {
 				// orb.destroy();
 				DatagramSocket socket = new DatagramSocket(1111);
 				byte[] buffer = new byte[1];
@@ -780,7 +779,9 @@ public class CenterServerDDO {
 				centerServerDDOImplementation.logger
 						.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
 				socket1.close();
-			}
+			//}
+				orb.run();
+
 		} catch (Exception e) {
 			System.err.println("ERROR: " + e);
 			e.printStackTrace(System.out);
