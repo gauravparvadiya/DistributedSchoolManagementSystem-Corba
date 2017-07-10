@@ -80,7 +80,7 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 		orb = orb_val;
 	}
 
-	public CenterServerDDOImplementation() throws Exception {
+	public CenterServerDDOImplementation() {
 		super();
 
 		srtrDdo = new ArrayList<Object>();
@@ -603,8 +603,6 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 								array.remove(j);
 								return responseMsg;
 							}
-						} else {
-							return "record not found...!!";
 						}
 					}
 				}
@@ -690,15 +688,13 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 								array.remove(j);
 								return responseMsg;
 							}
-						} else {
-							return "record not found...!!";
 						}
 					}
 				}
 			}
 		}
 
-		return null;
+		return "record not found";
 	}
 
 }
@@ -706,13 +702,22 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 public class CenterServerDDO extends Thread {
 
 	public static void main(String args[]) {
+		
+		CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
+		try {
+			centerServerDDOImplementation.addDefaultRecords();
+			System.out.println("called" + centerServerDDOImplementation.getCount());
+			
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
-					centerServerDDOImplementation.addDefaultRecords();
 					String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
 					String arg[] = args1.split(" ");
 					ORB orb = ORB.init(arg, null);
@@ -743,9 +748,6 @@ public class CenterServerDDO extends Thread {
 				try {
 
 					while (true) {
-						// orb.destroy();
-						CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
-						centerServerDDOImplementation.addDefaultRecords();
 						DatagramSocket socket = new DatagramSocket(1111);
 						byte[] buffer = new byte[1000];
 						DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -778,8 +780,6 @@ public class CenterServerDDO extends Thread {
 			public void run() {
 				try {
 					while (true) {
-						CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
-						centerServerDDOImplementation.addDefaultRecords();
 						DatagramSocket socket1 = new DatagramSocket(1112);
 						byte[] buffer12 = new byte[1000];
 						DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);

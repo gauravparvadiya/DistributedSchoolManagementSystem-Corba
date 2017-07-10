@@ -238,22 +238,22 @@ public class ManagerClient implements Runnable {
 		logger.info("Using transfer record method.");
 		if (managerID.substring(0, 3).equals("MTL")) {
 			logger.debug("connected to Montreal server");
-			if(!centerImplMTL.transferRecord(managerID, id, server_name).equals("record not found...!!"))
+			if(!centerImplMTL.transferRecord(managerID, id, server_name).equals("record not found"))
 				System.out.println("tansfer successful");
 			else
-				System.out.println("error.");
+				System.out.println("record not found.");
 		} else if (!managerID.substring(0, 3).equals("LVL")) {
 			logger.debug("connected to Laval server");
-			if(!centerImplLVL.transferRecord(managerID, id, server_name).equals("record not found...!!"))
+			if(!centerImplLVL.transferRecord(managerID, id, server_name).equals("record not found"))
 				System.out.println("tansfer successful");
 			else
-				System.out.println("error.");
+				System.out.println("record not found.");
 		} else {
 			logger.debug("connected to DDO server");
-			if(!centerImplDDO.transferRecord(managerID, id, server_name).equals("record not found...!!"))
+			if(!centerImplDDO.transferRecord(managerID, id, server_name).equals("record not found"))
 				System.out.println("tansfer successful");
 			else
-				System.out.println("error.");
+				System.out.println("record not found.");
 		}
 	}
 

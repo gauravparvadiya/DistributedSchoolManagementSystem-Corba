@@ -53,7 +53,7 @@ class CenterServerMTLImplementation extends CenterPOA implements Serializable {
 		orb = orb_val;
 	}
 
-	public CenterServerMTLImplementation() throws Exception {
+	public CenterServerMTLImplementation() {
 		super();
 
 		srtrRecords = new HashMap<String, ArrayList<Object>>();
@@ -486,11 +486,11 @@ class CenterServerMTLImplementation extends CenterPOA implements Serializable {
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
+				System.out.println(array.size());
 				for (int j = 0; j < array.size(); j++) {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
-
 							if (remoteCenterServerName.equals("LVL")) {
 								logger.info(managerID + "| Using transferRecord method.");
 								DatagramSocket socket = null;
@@ -563,8 +563,6 @@ class CenterServerMTLImplementation extends CenterPOA implements Serializable {
 								array.remove(j);
 								return responseMsg;
 							}
-						} else {
-							return "record not found...!!";
 						}
 					}
 				}
@@ -650,99 +648,96 @@ class CenterServerMTLImplementation extends CenterPOA implements Serializable {
 								array.remove(j);
 								return responseMsg;
 							}
-						} else {
-							return "record not found...!!";
 						}
 					}
 				}
 			}
 		}
-		return null;
+		return "record not found";
 	}
 
 }
 
 public class CenterServerMTL extends Thread {
-	CenterServerMTLImplementation centerServerMTLImplementation;
 	public static void main(String args[]) {
+
+		CenterServerMTLImplementation centerServerMTLImplementation = new CenterServerMTLImplementation();
+		try {
+			centerServerMTLImplementation.addDefaultRecords();
+			System.out.println("called" + centerServerMTLImplementation.getCount());
+
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try{
-				CenterServerMTLImplementation centerServerMTLImplementation = new CenterServerMTLImplementation();
-				centerServerMTLImplementation = new CenterServerMTLImplementation();
-				centerServerMTLImplementation.addDefaultRecords();
-				String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
-				String arg[] = args1.split(" ");
-				ORB orb = ORB.init(arg, null);
-				POA rootpoa;
-				rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-				rootpoa.the_POAManager().activate();
-				centerServerMTLImplementation.setORB(orb);
-				org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerMTLImplementation);
-				Center href = CenterHelper.narrow(ref);
-				org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-				NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-				String name = "MTLServer";
-				NameComponent path[] = ncRef.to_name(name);
-				ncRef.rebind(path, href);
-				System.out.println("MTL Server ready and waiting ...");
-				orb.run();
-				}
-				catch(Exception e){
-					
-				}
-			}
-		}).start();
-		
-		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				try {
-				
-				while (true) {
-					// orb.destroy();
-					CenterServerMTLImplementation centerServerMTLImplementation = new CenterServerMTLImplementation();
-					centerServerMTLImplementation.addDefaultRecords();
-					DatagramSocket socket = new DatagramSocket(2964);
-					byte[] buffer = new byte[1000];
-					DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-					socket.receive(request);
-					centerServerMTLImplementation.logger
-							.info("Request received from : " + request.getAddress() + ":" + request.getPort());
-					String replyStr = "MTL : " + centerServerMTLImplementation.getCount();
-					byte[] buffer1 = replyStr.getBytes();
-					DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
-							request.getPort());
-					socket.send(reply);
-					centerServerMTLImplementation.logger
-							.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
-					socket.close();
+					String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
+					String arg[] = args1.split(" ");
+					ORB orb = ORB.init(arg, null);
+					POA rootpoa;
+					rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+					rootpoa.the_POAManager().activate();
+					centerServerMTLImplementation.setORB(orb);
+					org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerMTLImplementation);
+					Center href = CenterHelper.narrow(ref);
+					org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+					NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+					String name = "MTLServer";
+					NameComponent path[] = ncRef.to_name(name);
+					ncRef.rebind(path, href);
+					System.out.println("MTL Server ready and waiting ...");
+					orb.run();
+				} catch (Exception e) {
 
-					
-					//orb.run();
+				}
+			}
+		}).start();
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+
+					while (true) {
+						DatagramSocket socket = new DatagramSocket(2964);
+						byte[] buffer = new byte[1000];
+						DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+						socket.receive(request);
+						centerServerMTLImplementation.logger
+								.info("Request received from : " + request.getAddress() + ":" + request.getPort());
+						String replyStr = "MTL : " + centerServerMTLImplementation.getCount();
+						byte[] buffer1 = replyStr.getBytes();
+						DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length, request.getAddress(),
+								request.getPort());
+						socket.send(reply);
+						centerServerMTLImplementation.logger
+								.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+						socket.close();
+
+						// orb.run();
+					}
+
 				}
 
-			}
+				catch (Exception e) {
+					System.err.println("ERROR: " + e);
+					e.printStackTrace(System.out);
+				}
 
-			catch (Exception e) {
-				System.err.println("ERROR: " + e);
-				e.printStackTrace(System.out);
-			}
-
-			System.out.println("HelloServer Exiting ...");
-
+				System.out.println("HelloServer Exiting ...");
 
 			}
 		}).start();
-		
+
 		new Thread(new Runnable() {
 			public void run() {
-				try{
-					CenterServerMTLImplementation centerServerMTLImplementation = new CenterServerMTLImplementation();
-					centerServerMTLImplementation.addDefaultRecords();
+				try {
 					DatagramSocket socket1 = new DatagramSocket(2965);
 					byte[] buffer12 = new byte[1000];
 					DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
@@ -775,8 +770,7 @@ public class CenterServerMTL extends Thread {
 					centerServerMTLImplementation.logger
 							.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
 					socket1.close();
-				}
-				catch(Exception e){
+				} catch (Exception e) {
 					System.err.println("ERROR: " + e);
 					e.printStackTrace(System.out);
 				}
@@ -784,5 +778,4 @@ public class CenterServerMTL extends Thread {
 		}).start();
 	}
 
-			
 }
