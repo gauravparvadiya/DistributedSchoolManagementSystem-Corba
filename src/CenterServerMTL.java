@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -20,11 +21,17 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -37,7 +44,7 @@ import CorbaApp.Center;
 import CorbaApp.CenterHelper;
 import CorbaApp.CenterPOA;
 
-class CenterServerMTLImplementation extends CenterPOA {
+class CenterServerMTLImplementation extends CenterPOA implements Serializable {
 	private ORB orb;
 
 	public HashMap<String, ArrayList<Object>> srtrRecords;
@@ -480,7 +487,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 	@Override
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
 
-		if (recordID.substring(0, 3).equals("LSR") || recordID.substring(0, 3).equals("DSR")) {
+		if (recordID.substring(0, 3).equals("MSR")) {
 			Student s;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -489,7 +496,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
-							
+
 							if (remoteCenterServerName.equals("LVL")) {
 								logger.info(managerID + "| Using transferRecord method.");
 								DatagramSocket socket = null;
@@ -568,7 +575,7 @@ class CenterServerMTLImplementation extends CenterPOA {
 					}
 				}
 			}
-		} else if (recordID.substring(0, 3).equals("LTR") || recordID.substring(0, 3).equals("DTR")) {
+		} else if (recordID.substring(0, 3).equals("MTR")) {
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -665,45 +672,30 @@ public class CenterServerMTL {
 
 	public static void main(String args[]) {
 		try {
-			// create and initialize the ORB
-			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
-			String arg[] = args1.split(" ");
 
-			ORB orb = ORB.init(arg, null);
-
-			// get reference to rootpoa & activate the POAManager
-			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			rootpoa.the_POAManager().activate();
-
-			// create servant and register it with the ORB
 			CenterServerMTLImplementation centerServerMTLImplementation = new CenterServerMTLImplementation();
 			centerServerMTLImplementation.addDefaultRecords();
+			String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
+			String arg[] = args1.split(" ");
+			ORB orb = ORB.init(arg, null); 
+			POA rootpoa;
+			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+			rootpoa.the_POAManager().activate();
 			centerServerMTLImplementation.setORB(orb);
-
-			// get object reference from the servant
 			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServerMTLImplementation);
 			Center href = CenterHelper.narrow(ref);
-
-			// get the root naming context
-			// NameService invokes the name service
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			// Use NamingContextExt which is part of the Interoperable
-			// Naming Service (INS) specification.
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-
-			// bind the Object Reference in Naming
 			String name = "MTLServer";
 			NameComponent path[] = ncRef.to_name(name);
 			ncRef.rebind(path, href);
-
-			System.out.println("Montreal Server ready and waiting ...");
-
-			// wait for invocations from clients
+			System.out.println("MTL Server ready and waiting ...");
 			orb.run();
 
 			while (true) {
+				// orb.destroy();
 				DatagramSocket socket = new DatagramSocket(2964);
-				byte[] buffer = new byte[1];
+				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				socket.receive(request);
 				centerServerMTLImplementation.logger
@@ -716,17 +708,16 @@ public class CenterServerMTL {
 				centerServerMTLImplementation.logger
 						.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
 				socket.close();
-				
+
 				DatagramSocket socket1 = new DatagramSocket(2965);
 				byte[] buffer12 = new byte[1];
 				DatagramPacket request1 = new DatagramPacket(buffer12, buffer12.length);
 				socket1.receive(request1);
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer12);
-			    ObjectInputStream is = new ObjectInputStream(in);
-			    Object o = is.readObject();
-			    in.close();
-			    String replyStr1 = null;
-			    if (o instanceof Student) {
+				ObjectInputStream is = new ObjectInputStream(in);
+				Object o = is.readObject();
+				String replyStr1 = null;
+				if (o instanceof Student) {
 					Student s = (Student) o;
 					int id = Integer.parseInt(centerServerMTLImplementation.lastSRecordId.substring(3, 8));
 					centerServerMTLImplementation.lastSRecordId = "MSR" + "" + ++id;
@@ -741,11 +732,14 @@ public class CenterServerMTL {
 					centerServerMTLImplementation.addToMap(t);
 					replyStr1 = "Success";
 				}
-			    centerServerMTLImplementation.logger.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
+				centerServerMTLImplementation.logger
+						.info("Request received from : " + request1.getAddress() + ":" + request1.getPort());
 				byte[] buffer11 = replyStr1.getBytes();
-				DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(), request1.getPort());
+				DatagramPacket reply1 = new DatagramPacket(buffer11, buffer11.length, request1.getAddress(),
+						request1.getPort());
 				socket1.send(reply1);
-				centerServerMTLImplementation.logger.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
+				centerServerMTLImplementation.logger
+						.info("Reply sent to : " + request1.getAddress() + ":" + request1.getPort());
 				socket1.close();
 			}
 

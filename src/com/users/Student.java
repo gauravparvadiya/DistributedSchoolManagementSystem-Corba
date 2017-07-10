@@ -1,6 +1,8 @@
 package com.users;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
 
 	private String fname;
 	private String lname;

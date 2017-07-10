@@ -30,7 +30,7 @@ import com.users.Manager;
 import CorbaApp.Center;
 import CorbaApp.CenterHelper;
 
-public class ManagerClient {
+public class ManagerClient implements Runnable {
 
 	static Center centerImplMTL, centerImplLVL, centerImplDDO;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
@@ -238,13 +238,13 @@ public class ManagerClient {
 		logger.info("Using transfer record method.");
 		if (managerID.substring(0, 3).equals("MTL")) {
 			logger.debug("connected to Montreal server");
-			if(!centerImplMTL.transferRecord(managerID, id, server_name).equals("Success"))
+			if(!centerImplMTL.transferRecord(managerID, id, server_name).equals("record not found...!!"))
 				System.out.println("tansfer successful");
 			else
 				System.out.println("error.");
 		} else if (!managerID.substring(0, 3).equals("LVL")) {
 			logger.debug("connected to Laval server");
-			if(centerImplLVL.transferRecord(managerID, id, server_name).equals("Success"))
+			if(!centerImplLVL.transferRecord(managerID, id, server_name).equals("record not found...!!"))
 				System.out.println("tansfer successful");
 			else
 				System.out.println("error.");
@@ -367,6 +367,8 @@ public class ManagerClient {
 			centerImplDDO = CenterHelper.narrow(ncRef.resolve_str(ddo));
 
 			ManagerClient managerClient = new ManagerClient();
+			Thread t = new Thread(managerClient);
+			t.start();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
@@ -498,12 +500,18 @@ public class ManagerClient {
 
 			centerImplMTL.shutdown();
 			centerImplLVL.shutdown();
-			centerImplDDO.shutdown();   
+			centerImplDDO.shutdown();
 
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);
 		}
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
