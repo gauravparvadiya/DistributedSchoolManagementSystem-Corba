@@ -332,7 +332,7 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 		logger.info(managerID + "| createTRecord method | Teacher information - [{" + fname + ", " + lastName + ", "
 				+ address + ", " + phone + ", " + specialization + ", " + location + "}]");
 		addToMap(t);
-		logger.info(managerID + "| Teacher created successfully.");
+		logger.info(managerID + "| Teacher created successfully with id " + lastTRecordId);
 		return "hi";
 	}
 
@@ -345,7 +345,7 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 		logger.info(managerID + "| createSRecord method | Student information - [{" + fname + ", " + lastName + ", "
 				+ courseRegistered + ", " + status + ", " + statusDate + "}]");
 		addToMap(s);
-		logger.info(managerID + "| Student created successfully.");
+		logger.info(managerID + "| Student created successfully with id " + lastSRecordId);
 		return "hi";
 	}
 
@@ -520,8 +520,6 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 
 	@Override
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
-		// TODO Auto-generated method stub
-
 		if (recordID.substring(0, 3).equals("DSR")) {
 			Student s;
 			for (int i = 65; i < 91; i++) {
@@ -706,7 +704,7 @@ public class CenterServerDDO extends Thread {
 		CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
 		try {
 			centerServerDDOImplementation.addDefaultRecords();
-			System.out.println("called" + centerServerDDOImplementation.getCount());
+			//System.out.println("called" + centerServerDDOImplementation.getCount());
 			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block

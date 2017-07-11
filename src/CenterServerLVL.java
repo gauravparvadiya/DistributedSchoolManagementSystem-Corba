@@ -280,7 +280,7 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 		logger.info(managerID + "| createTRecord method | Teacher information - [{" + fname + ", " + lastName + ", "
 				+ address + ", " + phone + ", " + specialization + ", " + location + "}]");
 		addToMap(t);
-		logger.info(managerID + "| Teacher created successfully.");
+		logger.info(managerID + "| Teacher created successfully with id " + lastTRecordId);
 		return "hi";
 	}
 
@@ -293,7 +293,7 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 		logger.info(managerID + "| createSRecord method | Student information - [{" + fname + ", " + lastName + ", "
 				+ courseRegistered + ", " + status + ", " + statusDate + "}]");
 		addToMap(s);
-		logger.info(managerID + "| Student created successfully.");
+		logger.info(managerID + "| Student created successfully with id " + lastSRecordId);
 		return "hi";
 	}
 
@@ -665,7 +665,7 @@ public class CenterServerLVL extends Thread {
 		CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
 		try {
 			centerServerLVLImplementation.addDefaultRecords();
-			System.out.println("called" + centerServerLVLImplementation.getCount());
+			//System.out.println("called" + centerServerLVLImplementation.getCount());
 
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
