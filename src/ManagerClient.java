@@ -431,12 +431,9 @@ public class ManagerClient implements Runnable {
 							System.out.println("Last Name : ");
 							lastName = s.nextLine();
 							System.out.println("Courses registered (separated with comma) : ");
-							// temp = s.nextLine();
-							// courses = temp.split(",");
 							courses = s.nextLine();
 							System.out.println("Status : (active & deactive)");
 							status = s.nextLine();
-							// s.nextLine();
 							System.out.println("Status Date : (DD/MM/YYYY)");
 							statusDate = s.nextLine();
 							pattern = Pattern.compile(DATE_PATTERN);
@@ -510,8 +507,7 @@ public class ManagerClient implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

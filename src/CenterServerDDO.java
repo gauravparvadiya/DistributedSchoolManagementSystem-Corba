@@ -279,13 +279,6 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 			if (array != null) {
 				for (int i = 7; i < 10; i++) {
 					JsonObject object = (JsonObject) array.get(i);
-					// JsonArray courseList =
-					// object.get("coursesRegistered").getAsJsonArray();
-					// String[] coursesRegistered = new
-					// String[courseList.size()];
-					// for (int j = 0; j < courseList.size(); j++) {
-					// coursesRegistered[j] = courseList.get(j).getAsString();
-					// }
 					Student s = new Student(object.get("fname").getAsString(), object.get("lname").getAsString(),
 							object.get("coursesRegistered").getAsString(), object.get("status").getAsString(),
 							object.get("statusDueDate").getAsString(), object.get("id").getAsString());
@@ -456,7 +449,6 @@ class CenterServerDDOImplementation extends CenterPOA implements Serializable {
 				}
 			}
 		} else if (recordID.substring(0, 3).equals("DTR")) {
-			// System.out.println("Edit teacher");
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -704,10 +696,8 @@ public class CenterServerDDO extends Thread {
 		CenterServerDDOImplementation centerServerDDOImplementation = new CenterServerDDOImplementation();
 		try {
 			centerServerDDOImplementation.addDefaultRecords();
-			//System.out.println("called" + centerServerDDOImplementation.getCount());
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

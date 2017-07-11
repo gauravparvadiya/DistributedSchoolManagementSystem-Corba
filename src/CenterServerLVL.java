@@ -359,7 +359,6 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 
 	@Override
 	public String editRecord(String managerID, String recordID, String fieldName, String newValue) {
-		// System.out.println(recordID);
 		Boolean result = false;
 		String result_string;
 		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);
@@ -418,7 +417,6 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 				}
 			}
 		} else if (recordID.substring(0, 3).equals("LTR")) {
-			// System.out.println("Edit teacher");
 			Teacher t;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
@@ -481,7 +479,6 @@ class CenterServerLVLImplementation extends CenterPOA implements Serializable {
 
 	@Override
 	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
-		// TODO Auto-generated method stub
 		if (recordID.substring(0, 3).equals("LSR")) {
 			Student s;
 			for (int i = 65; i < 91; i++) {
@@ -665,10 +662,8 @@ public class CenterServerLVL extends Thread {
 		CenterServerLVLImplementation centerServerLVLImplementation = new CenterServerLVLImplementation();
 		try {
 			centerServerLVLImplementation.addDefaultRecords();
-			//System.out.println("called" + centerServerLVLImplementation.getCount());
 
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -677,10 +672,6 @@ public class CenterServerLVL extends Thread {
 			@Override
 			public void run() {
 				try {
-					// CenterServerLVLImplementation
-					// centerServerLVLImplementation = new
-					// CenterServerLVLImplementation();
-					// centerServerLVLImplementation.addDefaultRecords();
 					String args1 = "-ORBInitialPort 1050 -ORBInitialHost localhost";
 					String arg[] = args1.split(" ");
 					ORB orb = ORB.init(arg, null);
@@ -713,10 +704,6 @@ public class CenterServerLVL extends Thread {
 				try {
 
 					while (true) {
-						// CenterServerLVLImplementation
-						// centerServerLVLImplementation = new
-						// CenterServerLVLImplementation();
-						// centerServerLVLImplementation.addDefaultRecords();
 						DatagramSocket socket = new DatagramSocket(1212);
 						byte[] buffer = new byte[1000];
 						DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -732,7 +719,6 @@ public class CenterServerLVL extends Thread {
 								.info("Reply sent to : " + request.getAddress() + ":" + request.getPort());
 						socket.close();
 
-						// orb.run();
 					}
 				}
 
@@ -760,7 +746,6 @@ public class CenterServerLVL extends Thread {
 						socket1.receive(request1);
 						centerServerLVLImplementation.logger.info("request received");
 						ByteArrayInputStream in = new ByteArrayInputStream(request1.getData());
-						// System.out.println(request1.getLength());
 						ObjectInputStream is = new ObjectInputStream(in);
 						Object o = is.readObject();
 						String replyStr1 = null;
