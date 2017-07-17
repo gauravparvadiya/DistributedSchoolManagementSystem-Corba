@@ -1,0 +1,90 @@
+[{
+	"id": "MTR10001",
+	"fname": "Aaron",
+	"lname": "Baton",
+	"address" : "1650 Maisonneuve Blvd W, Montreal, QC",
+	"phone" : "(438) 924-7741",
+	"specialization" : "Machine Learning",
+	"location" : "Montreal"
+},
+{
+	"id": "MTR10002",
+	"fname": "Abraham",
+	"lname": "Lincon",
+	"address" : "1426 Bishop St, Montreal, QC H3G 2E6",
+	"phone" : "(514) 924-7741",
+	"specialization" : "Mathematics",
+	"location" : "Montreal"
+},
+{
+	"id": "MTR10003",
+	"fname": "Albert",
+	"lname": "Moore",
+	"address" : "1684 Boulevard de Maisonneuve O, Montréal, QC H3H 1J7",
+	"phone" : "(514) 006-9939",
+	"specialization" : "Distributed System Design",
+	"location" : "Montreal"
+},
+{
+	"id": "MTR10004",
+	"fname": "Bernard",
+	"lname": "Smith",
+	"address" : "1280 Rue Saint-Marc, Montréal, QC H3H 2G1",
+	"phone" : "(438) 789-9939",
+	"specialization" : "Machine Learning",
+	"location" : "Montreal"
+},
+{
+	"id": "LTR10001",
+	"fname": "Brock",
+	"lname": "Lanester",
+	"address" : "1755 Boulevard René-Laennec, Laval, QC H7M 3L9",
+	"phone" : "(438) 111-5389",
+	"specialization" : "Mathematics",
+	"location" : "Laval"
+},
+{
+	"id": "LTR10002",
+	"fname": "Nicol",
+	"lname": "Cadman",
+	"address" : "0A4, 5205 Boulevard Robert-Bourassa, Laval, QC H7E 0A5",
+	"phone" : "(514) 378-9542",
+	"specialization" : "Machine Learning",
+	"location" : ":Laval"
+},
+{
+	"id": "LTR10003",
+	"fname": "Albert",
+	"lname": "Moore",
+	"address" : "Tour A, 1600 Boul Saint-Martin Est #175, Laval, QC H7G 4R8",
+	"phone" : "(514) 438-8024",
+	"specialization" : "Distributed System Design",
+	"location" : "Laval"
+},
+{
+	"id": "DTR10001",
+	"fname": "Jon",
+	"lname": "Carter",
+	"address" : "136 Boulevard Westpark, Dollard-des-Ormeaux, QC H9A 2K2",
+	"phone" : "(514) 548-1202",
+	"specialization" : "Distributed System Design",
+	"location" : "Dollard-des-Ormeaux"
+},
+{
+	"id": "DTR10002",
+	"fname": "Jordan",
+	"lname": "Nassie",
+	"address" : "2983 Lake St, Dollard-Des Ormeaux, QC H9B 2L1",
+	"phone" : "(514) 659-2489",
+	"specialization" : "Machine Learning",
+	"location" : "Dollard-des-Ormeaux"
+},
+{
+	"id": "DTR10003",
+	"fname": "Payal",
+	"lname": "Seth",
+	"address" : "2900 Lake St, Dollard-Des Ormeaux, QC H9B 2P1",
+	"phone" : "(514) 750-2023",
+	"specialization" : "Mathematics",
+	"location" : "Dollard-des-Ormeaux"
+}]

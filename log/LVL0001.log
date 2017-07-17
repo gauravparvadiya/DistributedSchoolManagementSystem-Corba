@@ -1,0 +1,4 @@
+DEBUG   2017-07-11 20:47:34,915 [main] ManagerClient  - connected to manager client.
+INFO    2017-07-11 20:47:37,716 [main] ManagerClient  - Starting to create teacher.
+INFO    2017-07-11 20:47:51,807 [main] ManagerClient  - Using createTRecord method.
+INFO    2017-07-11 20:47:51,813 [main] ManagerClient  - Teacher record created successfully.

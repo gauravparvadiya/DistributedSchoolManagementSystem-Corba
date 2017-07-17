@@ -1,0 +1,3 @@
+DEBUG   2017-07-11 20:48:03,194 [main] ManagerClient  - connected to manager client.
+INFO    2017-07-11 20:48:05,638 [main] ManagerClient  - Using getRecordCount method.
+DEBUG   2017-07-11 20:48:05,638 [main] ManagerClient  - connected to DDO server

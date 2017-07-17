@@ -1,0 +1,8 @@
+DEBUG   2017-07-11 20:46:53,192 [main] ManagerClient  - connected to manager client.
+INFO    2017-07-11 20:47:08,960 [main] ManagerClient  - Starting to create student.
+INFO    2017-07-11 20:47:22,351 [main] ManagerClient  - Using createSRecord method.
+INFO    2017-07-11 20:47:22,359 [main] ManagerClient  - Student record created successfully.
+INFO    2017-07-11 20:49:07,106 [main] ManagerClient  - Using transfer record method.
+DEBUG   2017-07-11 20:49:07,107 [main] ManagerClient  - connected to Montreal server
+INFO    2017-07-11 20:49:11,719 [main] ManagerClient  - Using getRecordCount method.
+DEBUG   2017-07-11 20:49:11,719 [main] ManagerClient  - connected to Montreal server
