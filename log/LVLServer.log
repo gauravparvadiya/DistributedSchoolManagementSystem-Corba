@@ -1,0 +1,15 @@
+INFO    2017-07-11 20:38:15,072 [Thread-2] CenterServerLVLImplementation  - socket created-1
+INFO    2017-07-11 20:38:15,073 [Thread-2] CenterServerLVLImplementation  - request created
+INFO    2017-07-11 20:46:43,149 [Thread-2] CenterServerLVLImplementation  - socket created-1
+INFO    2017-07-11 20:46:43,150 [Thread-2] CenterServerLVLImplementation  - request created
+INFO    2017-07-11 20:47:51,811 [p: default-threadpool; w: Idle] CenterServerLVLImplementation  - LVL0001| createTRecord method | Teacher information - [{a, a, montreal, 4389247741, a, a}]
+INFO    2017-07-11 20:47:51,811 [p: default-threadpool; w: Idle] CenterServerLVLImplementation  - LVL0001| Teacher created successfully with id LTR10004
+INFO    2017-07-11 20:48:05,646 [Thread-1] CenterServerLVLImplementation  - Request received from : /127.0.0.1:62855
+INFO    2017-07-11 20:48:05,646 [Thread-1] CenterServerLVLImplementation  - Reply sent to : /127.0.0.1:62855
+INFO    2017-07-11 20:49:07,113 [Thread-2] CenterServerLVLImplementation  - request received
+INFO    2017-07-11 20:49:07,117 [Thread-2] CenterServerLVLImplementation  - Request received from : /127.0.0.1:62857
+INFO    2017-07-11 20:49:07,118 [Thread-2] CenterServerLVLImplementation  - Reply sent to : /127.0.0.1:62857
+INFO    2017-07-11 20:49:07,118 [Thread-2] CenterServerLVLImplementation  - socket created-1
+INFO    2017-07-11 20:49:07,118 [Thread-2] CenterServerLVLImplementation  - request created
+INFO    2017-07-11 20:49:11,721 [Thread-1] CenterServerLVLImplementation  - Request received from : /127.0.0.1:62858
+INFO    2017-07-11 20:49:11,721 [Thread-1] CenterServerLVLImplementation  - Reply sent to : /127.0.0.1:62858
